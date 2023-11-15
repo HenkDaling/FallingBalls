@@ -12,8 +12,8 @@ add_executable(FallingBalls main.cpp SDL_Plotter.h SDL_Plotter.cpp)
 target_include_directories(FallingBalls PRIVATE ../SDL2-2.28.5/x86_64-w64-mingw32/include)
 target_include_directories(FallingBalls PRIVATE ../SDL2_mixer-2.6.3/x86_64-w64-mingw32/include)
 
-target_link_directories(FallingBalls PRIVATE C:/Users/henkd/Documents/CSI/GroupProject/SDL2_mixer-2.6.3/x86_64-w64-mingw32/lib)
-target_link_directories(FallingBalls PRIVATE C:/Users/henkd/Documents/CSI/GroupProject/SDL2-2.28.5/x86_64-w64-mingw32/lib)
+target_link_directories(FallingBalls PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../SDL2_mixer-2.6.3/x86_64-w64-mingw32/lib)
+target_link_directories(FallingBalls PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../SDL2-2.28.5/x86_64-w64-mingw32/lib)
 
 INCLUDE_DIRECTORIES(../SDL2-2.28.5/x86_64-w64-mingw32/include)
 INCLUDE_DIRECTORIES(../SDL2-2.28.5/x86_64-w64-mingw32/include/SDL2)
