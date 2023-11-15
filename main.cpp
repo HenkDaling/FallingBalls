@@ -36,6 +36,8 @@ int main(int argc, char ** argv)
 		g.update();
 
     }
+
+	return 0;
 }
 
 
