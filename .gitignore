@@ -49,3 +49,14 @@
 **/*.cbp
 **/CMakeScripts
 **/compile_commands.json
+
+## Local 
+
+.idea/*.xml
+
+build/**/*
+
+include/*
+lib/*
+bin/*
+test/test_runner
