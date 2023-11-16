@@ -5,7 +5,7 @@ project(FallingBalls)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -lmingw32")
 set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
 
-add_executable(FallingBalls main.cpp SDL_Plotter.h SDL_Plotter.cpp)
+add_executable(FallingBalls main.cpp SDL_Plotter.h SDL_Plotter.cpp "../images/dots.c")
 
 ##
 
