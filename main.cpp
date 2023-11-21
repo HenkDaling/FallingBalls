@@ -1,12 +1,16 @@
 #include <iostream>
 #include <cmath>
 #include "SDL_Plotter.h"
-#include "../images/dots.c"
+#include "images/dots.c"
+#include "images/beachBall.c"
+#include "images/2703.c"
+
 
 using namespace std;
 
 void drawCircle(point loc, int size, color c, SDL_Plotter& g);
 void drawBmp(point loc,const img &im, SDL_Plotter& g);
+void drawImage(point loc, const img& image, SDL_Plotter& g);
 
 int main(int argc, char ** argv)
 {
@@ -34,10 +38,34 @@ int main(int argc, char ** argv)
 			c.G  = rand()%256;
 			c.B  = rand()%256;
 			//drawCircle(p, size, c, g);
-			drawBmp(p, gimp_image, g);
+			drawImage(p, beachBall, g);
 		}
+
 		g.update();
 
+    }
+
+	return 0;
+}
+
+
+void drawImage(point loc, const img& image, SDL_Plotter& g){
+	
+    int index = 0;
+    for (int y = loc.y; y < image.height + loc.y; ++y) {
+        for (int x = loc.x; x < image.width + loc.x; ++x) {
+            int rd = image.pixel_data[index++];
+            int gn = image.pixel_data[index++];
+            int bl = image.pixel_data[index++];
+			if(image.bytes_per_pixel == 4){
+				int a = image.pixel_data[index++];
+				
+				g.plotPixel(x,y,rd,gn,bl, a);
+			}
+			else{
+				g.plotPixel(x, y, rd, gn, bl);   
+			}
+        }
     }
 }
 

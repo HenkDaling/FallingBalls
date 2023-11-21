@@ -139,6 +139,7 @@ public:
     point getMouseClick();
 
     void plotPixel(int x, int y, int r, int g, int b);
+    void plotPixel(int x, int y, int r, int g, int b, int a);
     void plotPixel(point p, int r, int g, int b);
     void plotPixel(int x, int y, color=color{});
     void plotPixel(point p, color=color{});

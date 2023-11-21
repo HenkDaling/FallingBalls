@@ -59,9 +59,13 @@ SDL_Plotter::SDL_Plotter(int r, int c, bool WITH_SOUND){
 
     renderer = SDL_CreateRenderer(window, -1, 0);
 
+	//SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
     texture  = SDL_CreateTexture(renderer,
     		                     SDL_PIXELFORMAT_ARGB8888,
     		                     SDL_TEXTUREACCESS_STATIC, col, row);
+
+	
 
     pixels   = new Uint32[col * row];
 
@@ -181,6 +185,28 @@ void SDL_Plotter::plotPixel(point p, color c){
 void SDL_Plotter::plotPixel(int x, int y, int r, int g, int b){
 	if(x >= 0 && y >= 0 && x < col && y < row){
     	pixels[y * col + x] = RED_SHIFT*r + GREEN_SHIFT*g + BLUE_SHIFT*b;
+	}
+}
+
+void SDL_Plotter::plotPixel(int x, int y, int r, int g, int b, int a){
+	//alpha blending dstRGB = (srcRGB * srcA) + (dstRGB * (1-srcA))
+	Uint8 dstR, dstG, dstB, dstA;
+	SDL_PixelFormat *format;
+	
+	format = SDL_AllocFormat(SDL_GetWindowPixelFormat(window));
+
+	SDL_GetRGBA(pixels[y * col + x],format , &dstR, &dstG, &dstB, &dstA);
+	dstR /= RED_SHIFT;
+	dstG /= GREEN_SHIFT;
+	dstB /= BLUE_SHIFT;
+
+	
+	dstR = 255 - ((r * a) + (dstR) * (255-a));
+	dstG = 255 - ((g * a) + (dstG) * (255-a));
+	dstB = 255 - ((b * a) + (dstB) * (255-a));
+
+	if(x >= 0 && y >= 0 && x < col && y < row){
+    	pixels[y * col + x] = RED_SHIFT*dstR + GREEN_SHIFT*dstG + BLUE_SHIFT*dstB;
 	}
 }
 

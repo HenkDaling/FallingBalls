@@ -1,6 +1,6 @@
 /* GIMP RGB C-Source image dump (dots.c) */
 
-static const struct img {
+static const struct img2 {
   unsigned int 	 width;
   unsigned int 	 height;
   unsigned int 	 bytes_per_pixel; /* 2:RGB16, 3:RGB, 4:RGBA */ 
