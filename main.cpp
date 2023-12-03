@@ -50,9 +50,10 @@ void generateLevel (int level,vector<obstacle> &o ){
 
 		newO.show();
 		newO.setCount(level + rand() % level / 2);
+
 		newO.setColor(color(R,G,B, 255));
 
-		o.emplace_back(newO);
+		o.push_back(newO);
 	}
 		
 }
@@ -179,13 +180,11 @@ int main(int argc, char ** argv)
     while (!g.getQuit())
     {
 
-		
 		for (size_t i = 0; i < obst.size(); i++) {
 
 			if (obst.at(i).isDead()) {
                 // Remove the dead obstacle from the vecto
                 obst.at(i).hide();
-				
             } 
 
 		}
@@ -207,7 +206,7 @@ int main(int argc, char ** argv)
 
 
 			for(Object wall : walls){
-				wall.drawObject(g,draw_polygon_fill,color(255,0,0,255));
+				wall.drawObject(g,draw_polygon_fill,color(0,200,200,255));
 				b.isColiding(wall);
 			}
 

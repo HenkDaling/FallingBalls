@@ -38,7 +38,7 @@ static void drawLine(int x1, int y1, int x2, int y2, SDL_Plotter &g,color c) {
     int err = dx - dy;
 
     while (!endOfLine) {
-        g.plotPixel(x1, y1,c.R,c.G,c.B);
+        g.plotPixel(x1, y1,c.R,c.G,c.B,c.A);
 
         if (x1 == x2 && y1 == y2) {
             endOfLine = true;
