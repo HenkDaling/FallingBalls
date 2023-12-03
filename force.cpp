@@ -19,6 +19,7 @@ force force::operator+(const force& other) const{
 	return add(other);
 }
 
+
 void force::apply(const force& other){
 	*this = add(other);
 }

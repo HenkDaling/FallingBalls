@@ -1,6 +1,11 @@
 /*
  * SDL_Plotter.h
  *
+ * Henk Daling - Version 3.2
+ * Modify point struct
+ * Add alpha chanels for drawing pixels
+ * 11/21/23
+ * 
  * Version 3.1
  * Add: color and point constructors
  * 12/14/2022
@@ -31,6 +36,7 @@
 //Windows Library
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
+#include <SDL2/SDL_ttf.h>
 
 #include <string.h>
 #include <iostream>
@@ -38,6 +44,9 @@
 #include <string.h>
 #include <map>
 #include <queue>
+#include <cmath>
+
+#include "image.h"
 using namespace std;
 
 const char UP_ARROW    = 1;
@@ -52,14 +61,14 @@ const int WHITE        = 255;
 const int MAX_THREAD   = 100;
 
 
-//Point
-struct point{
+//m_point
+struct m_point{
 	int x,y;
-	point(){
+	m_point(){
 		x = y = 0;
 	}
 
-	point(int x, int y){
+	m_point(int x, int y){
 		this->x = x;
 		this->y = y;
 	}
@@ -67,15 +76,23 @@ struct point{
 
 //Color
 struct color{
-	unsigned int R,G,B;
+	unsigned int R,G,B,A;
 	color(){
-		R = G = B = 0;
+		R = G = B = A = 0;
 	}
+
 
 	color(int r, int g, int b){
 		R = r;
 		G = g;
 		B = b;
+	}
+
+    color(int r, int g, int b, int a){
+		R = r;
+		G = g;
+		B = b;
+        A = a;
 	}
 };
 
@@ -103,9 +120,14 @@ struct param{
 
 class SDL_Plotter{
 private:
+    SDL_Texture  *mix;
 	SDL_Texture  *texture;
+    SDL_Texture *fontLayer;
+    SDL_Texture *imageLayer;
 	SDL_Renderer *renderer;
 	SDL_Window   *window;
+    TTF_Font *font;
+
     Uint32       *pixels;
     const Uint8  *currentKeyStates;
     SDL_Event    event;
@@ -116,7 +138,7 @@ private:
     queue<char> key_queue;
 
     //Mouse Stuff
-    queue<point> click_queue;
+    queue<m_point> click_queue;
 
     //Sound Stuff
     bool SOUND;
@@ -136,13 +158,16 @@ public:
     bool kbhit();
     bool mouseClick();
     char getKey();
-    point getMouseClick();
+    m_point getMouseClick();
 
     void plotPixel(int x, int y, int r, int g, int b);
     void plotPixel(int x, int y, int r, int g, int b, int a);
-    void plotPixel(point p, int r, int g, int b);
+    void plotPixel(m_point p, int r, int g, int b);
     void plotPixel(int x, int y, color=color{});
-    void plotPixel(point p, color=color{});
+    void plotPixel(m_point p, color=color{});
+
+    void plotText(int x, int y, string text);
+    void plotImage(int x, int y,Image &I);
 
     void clear();
     int getRow();

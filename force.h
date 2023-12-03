@@ -2,10 +2,13 @@
 
 using namespace std;
 
+const static double g_acceleration = 0.0981;
+
 class force{
 	private:
 		double magnitude;
 		double direction;  // radian
+
 
 	public:
 		force();
