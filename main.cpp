@@ -136,7 +136,9 @@ int main(int argc, char ** argv)
     int size;
 	Image button(transparentTest);
 
-	ball b(point(100.0,100.0), 1);
+	Vector2D force(3, directions.up);
+	ball b(point(100.0,100.0), force);
+	
 	b.setBoundry(polygon::makeCircle(b.getPosition() + point(25,25), 30,30));
 	b.show();
 
@@ -197,12 +199,39 @@ int main(int argc, char ** argv)
 		}
 
 		if(!startGame){
-			startGame =drawStartScreen(g);
+			startGame = drawStartScreen(g);
 		}
+
 		if(startGame){
 
 			g.plotImage(40,0, bgI);
 			dt = dt + 5;
+
+			m_point mouseDown, mouseUp;
+			Vector2D force;
+			point ballLocation;
+		
+			if(g.mouseClick()){
+				bool up,down = false;
+
+				down = g.getMouseDown(mouseDown.x, mouseDown.y);
+				up = g.getMouseUp(mouseUp.x, mouseUp.y);
+
+				g.getMouseClick();
+
+				cout << up << " " << down << endl;
+
+				// if(up && down){
+				// 	cout << "force" << endl;
+				// 	force = Vector2D::createFromCartesian( mouseDown.x - mouseUp.x, mouseDown.y - mouseUp.y);
+				// 	ballLocation = point(mouseDown.x, mouseDown.y);
+
+				// 	b.setLocation(ballLocation);
+				// 	force = force ;
+
+				// 	b.applyForce(force);
+				// }
+			}
 
 
 			for(Object wall : walls){

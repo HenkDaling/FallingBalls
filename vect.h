@@ -1,8 +1,8 @@
 #ifndef VECT_H
 #define VECT_H
 
-#include <stdint-gcc.h>
 #include <cmath>
+#include <cstdint>
 
 using namespace std;
 

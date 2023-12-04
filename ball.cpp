@@ -2,13 +2,12 @@
 
 using namespace std::chrono;
 
-ball::ball(point pos,double m)
+ball::ball(point pos,Vector2D force)
 {
     this->updatePosition(pos);
-    mass = m;
+    mass = 1;
     
-    netForce.setMagnitude(mass * g_acceleration);
-    netForce.setDirection(directions.up);
+    netForce = force;
 
     acceleration = Vector2D::createFromCartesian(0, 0);
     velocity = Vector2D::createFromCartesian(2,1);
@@ -29,7 +28,8 @@ void ball::update(uint64_t deltaTime) {
     deltaTime = deltaTime - time;
 
     double timeFactor = 10;
-    acceleration = Vector2D(netForce.getMagnitude() / mass, netForce.getDirection());
+
+    acceleration = Vector2D(netForce.getMagnitude() / mass, netForce.getAngle());
  
     velocity = velocity + (acceleration * (deltaTime / timeFactor));
 
@@ -72,7 +72,7 @@ void ball::handleContCollisions(Object& other) {
         Vector2D reflection = velocity - (normalVector * (dotProduct * 2.0));
 
         // Update the velocity of the ball
-        velocity = reflection ;    
+        velocity = reflection * 0.8 ;    
         
 }
 
@@ -85,7 +85,7 @@ void ball::display(std::ostream& os) const {
     }
 
 
-void ball::applyForce(force F){
+void ball::applyForce(Vector2D F){
     netForce = netForce + F;
 }
 

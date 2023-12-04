@@ -373,6 +373,7 @@ bool SDL_Plotter::getMouseDown(int& x, int& y){
 				//Get mouse position
 				flag = true;
 				SDL_GetMouseState( &x, &y );
+				cout << "FROM SDL" << x << " " << y << endl; 
 			}
 			else{
 				SDL_PushEvent(&event);
@@ -389,6 +390,7 @@ bool SDL_Plotter::getMouseUp(int& x, int& y){
 				//Get mouse position
 				flag = true;
 				SDL_GetMouseState( &x, &y );
+				cout << "FROM SDL" << x << " " << y << endl; 
 			}
 			else{
 				SDL_PushEvent(&event);

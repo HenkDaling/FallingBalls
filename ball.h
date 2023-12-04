@@ -22,19 +22,16 @@ class ball : public Object
 {
 private:
     double mass = 1.0;
-    force netForce;
+    Vector2D netForce;
     Vector2D velocity;
     Vector2D acceleration;
     uint64_t time;
 
-    //void calculateAcceleration();
-
-
 public:
-    ball(point pos,double mass);
+    ball(point pos,Vector2D force);
     ~ball();
 
-    void applyForce(force F);
+    void applyForce(Vector2D F);
     void update(uint64_t deltaTime);
 
     using Object::handleCollision;
