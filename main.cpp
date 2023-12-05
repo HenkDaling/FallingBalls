@@ -9,6 +9,7 @@
 #include "images/button.c"
 #include "images/background.c"
 #include "images/backgroundStart.c"
+#include "images/arrow.c"
 
 #include "obstacle.h"
 #include "Object.h"
@@ -31,19 +32,19 @@ void generateLevel (int level,vector<obstacle> &o ){
 		int G = rand() % 100 + 155;
 		int B = rand() % 100 + 155;
 
-		newO.updatePosition(point(randomX, randomY));
+		newO.updatePosition(point2D(randomX, randomY));
 
 		int shape = rand() % 3;
 
 		switch(shape){
 			case 0: 
-				 newO.setBoundry(polygon::makeCenterSquare(newO.getPosition(), 50, 50)); // Adjust size as needed
+				 newO.setBoundry(polygon::makeCenterSquare(newO.getPosition(), 100, 100)); 
 				 break;
 			case 1: 
-				newO.setBoundry(polygon::makeCircle(newO.getPosition(), 25,30)); // Adjust size as needed
+				newO.setBoundry(polygon::makeCircle(newO.getPosition(), 50,6)); 
 				 break;
 			case 2: 
-				newO.setBoundry(polygon::makeEquilateralTriangle(newO.getPosition(), 70)); // Adjust size as needed
+				newO.setBoundry(polygon::makeEquilateralTriangle(newO.getPosition(), 100)); 
 				 break;
 
 		}
@@ -51,7 +52,7 @@ void generateLevel (int level,vector<obstacle> &o ){
 		newO.show();
 		newO.setCount(level + rand() % level / 2);
 
-		newO.setColor(color(R,G,B, 255));
+		newO.setColor(color(R,G,B));
 
 		o.push_back(newO);
 	}
@@ -59,7 +60,7 @@ void generateLevel (int level,vector<obstacle> &o ){
 }
 
 void moveUp(vector<obstacle> &o){
-	point pos;
+	point2D pos;
 
 	for (size_t i = 0; i < o.size(); i++) {
 		
@@ -80,37 +81,34 @@ bool drawStartScreen(SDL_Plotter &g){
 
 	Image sButtonImage(ButtonImg);
 	Object startButton(sButtonImage);
-	point mouseClick;
+	point2D mouseClick;
 
 	startButton.setText("START");
 	startText.setText("Hello worls");
-	point buttonLoc(330, 340);
-	point textLoc = buttonLoc + point(60,30);
+	point2D buttonLoc(330, 340);
+	point2D textLoc = buttonLoc + point2D(60,30);
 	startButton.setLocation(buttonLoc);
 	startButton.setTextLocation(textLoc);
-	startButton.setBoundry(polygon::makeCornerSquare(point(330,350),200,-80));
+	startButton.setBoundry(polygon::makeCornerSquare(point2D(330,350),200,-80));
 
 	if(g.mouseClick()){
-			//p = g.getMouseClick();
-			cout<< "mouseKclik" << endl;
-		}
-
-	if(g.mouseClick()){
-		m_point mouse = g.getMouseClick();
+		
+		point mouse = g.getMouseClick();
 		mouseClick.x = mouse.x;		
 		mouseClick.y = mouse.y;	
 
 		if(startButton.isInside(mouseClick)){
 			startGame = true;
 		}
+
+		g.getMouseClick();
 	}
 
 	static bool init = false;
 	if(!init){
-		g.plotImage(0,0, startImage);
+		draw::drawImagePixels(point2D(0,0),startImage, g);
 
 		startButton.drawObject(g,draw_image);
-		startButton.drawObject(g,draw_polygon_outline,color(255,0,255,255));
 		startButton.drawText(g);
 		startText.drawText(g);
 
@@ -131,42 +129,47 @@ int main(int argc, char ** argv)
 	uint64_t t = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 	uint64_t dt = 0;
     SDL_Plotter g(800,840);
-    m_point p;
+    point p;
     color c;
     int size;
 	Image button(transparentTest);
 
 	Vector2D force(3, directions.up);
-	ball b(point(100.0,100.0), force);
-	
-	b.setBoundry(polygon::makeCircle(b.getPosition() + point(25,25), 30,30));
+
+	ball b(point2D(100.0,100.0), force);
+	b.setBoundry(polygon::makeCircle(b.getPosition() + point2D(42,42), 42,30));
 	b.show();
 
 	Object box;
-	box.setLocation(point(0,790));
-	box.setBoundry(polygon::makeCornerSquare(box.getPosition(),800,40));
+	box.setLocation(point2D(0,0));
+	box.setBoundry(polygon::makeCornerSquare(box.getPosition(),800,10));
 	box.show();
 
 	Object wallLeft;
-	wallLeft.setLocation(point(0.0,800));
-	wallLeft.setBoundry(polygon::makeCornerSquare(wallLeft.getPosition(),40,800));
+	wallLeft.setLocation(point2D(0.0,800));
+	wallLeft.setBoundry(polygon::makeCornerSquare(wallLeft.getPosition(),10,800));
 	wallLeft.show();
 
 	Object wallRight;
-	wallRight.setLocation(point(800,800));
-	wallRight.setBoundry(polygon::makeCornerSquare(wallRight.getPosition(),40,800));
+	wallRight.setLocation(point2D(800,800));
+	wallRight.setBoundry(polygon::makeCornerSquare(wallRight.getPosition(),10,800));
 	wallRight.show();
 
 	vector<Object> walls;
 
 	Image bgI = Image(backgroundIMG);
 	Object background(bgI);
-	background.setLocation(point(40,0));
+	background.setLocation(point2D(40,0));
 	background.show();
 
 	walls.push_back(wallLeft);
 	walls.push_back(wallRight);
 	walls.push_back(box);
+
+	Image arrowImg(arrow);
+	Object directionArrow(arrowImg);
+	directionArrow.setLocation(point2D(g.getCol()/2.0, 20));
+	directionArrow.show();
 
 	uint64_t time = 0;
 
@@ -178,18 +181,10 @@ int main(int argc, char ** argv)
 	vector<obstacle> obst2;
 	bool startGame = false;
 	generateLevel(1, obst);
+	bool up,down = false;
 
     while (!g.getQuit())
     {
-
-		for (size_t i = 0; i < obst.size(); i++) {
-
-			if (obst.at(i).isDead()) {
-                // Remove the dead obstacle from the vecto
-                obst.at(i).hide();
-            } 
-
-		}
  
 		if(g.kbhit()){
 			switch(toupper(g.getKey())){
@@ -202,40 +197,55 @@ int main(int argc, char ** argv)
 			startGame = drawStartScreen(g);
 		}
 
+	
 		if(startGame){
 
-			g.plotImage(40,0, bgI);
-			dt = dt + 5;
+			a = 0.001;
 
-			m_point mouseDown, mouseUp;
-			Vector2D force;
-			point ballLocation;
-		
-			if(g.mouseClick()){
-				bool up,down = false;
+			for (size_t i = 0; i < obst.size(); i++) {
 
-				down = g.getMouseDown(mouseDown.x, mouseDown.y);
-				up = g.getMouseUp(mouseUp.x, mouseUp.y);
+				if (obst.at(i).isDead()) {
+					// Remove the dead obstacle from the vecto
+					obst.at(i).hide();
+            } 
 
-				g.getMouseClick();
-
-				cout << up << " " << down << endl;
-
-				// if(up && down){
-				// 	cout << "force" << endl;
-				// 	force = Vector2D::createFromCartesian( mouseDown.x - mouseUp.x, mouseDown.y - mouseUp.y);
-				// 	ballLocation = point(mouseDown.x, mouseDown.y);
-
-				// 	b.setLocation(ballLocation);
-				// 	force = force ;
-
-				// 	b.applyForce(force);
-				// }
 			}
 
+			g.clear();
+			dt = dt + 1;
+
+			b.update(dt);
+
+			//Draw direction arrow
+			int mouseX, mouseY;
+			Vector2D direction;
+			point2D arrowPos;
+
+			arrowPos = directionArrow.getPosition();
+			arrowPos.y = arrowPos.y + 0.5*arrow.height;
+
+			g.getMouseLocation(mouseX, mouseY);
+			direction = Vector2D::createFromCartesian( mouseX - arrowPos.x, mouseY - arrowPos.y);
+			
+			directionArrow.drawImage(g,direction.getAngle() ,arrowPos);
+			draw::drawFillPolygon(polygon::makeCircle(arrowPos,20,20).getPoints(),g, color(255,0,0));
+			//draw::drawFillPolygon(polygon::makeCircle(point2D(mouseX - arrowPos.x, mouseY - arrowPos.x),20,20).getPoints(),g, color(255,0,0));
+
+			if(g.mouseClick()){
+				g.getMouseClick();
+				b.setLocation(arrowPos - point2D(beachBall.width/2, beachBall.height/2));
+				b.giveVelocity(direction);
+			}
+
+			
+			
+			static double ang = 0;
+			ang += 0.01;
+			b.drawImage(g,0, b.getBoundry().calculateCenter());
+			b.drawObject(g,draw_polygon_outline,color(255,0,0));
 
 			for(Object wall : walls){
-				wall.drawObject(g,draw_polygon_fill,color(0,200,200,255));
+				wall.drawObject(g,draw_polygon_fill,color(0,200,200));
 				b.isColiding(wall);
 			}
 
@@ -249,8 +259,6 @@ int main(int argc, char ** argv)
 
 			}
 
-			a = 0.01;
-
 			if( duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count() - s5 > 4000){
 				level++;
 				moveUp(obst);
@@ -260,18 +268,14 @@ int main(int argc, char ** argv)
 
 
 			for (size_t i = 0; i < obst.size(); i++) {
-					point center;
+					point2D center;
 					obst.at(i).rotate(a,obst.at(i).getPosition());
 					center = obst.at(i).getPosition();
-					center = center - point(10,20) ;
+					center = center - point2D(10,20) ;
 					obst.at(i).setTextLocation(center);
 					obst.at(i).drawObstacle(g);
 			}
 
-			
-			b.update(dt);
-			b.drawObject(g,draw_image);
-			b.drawImage(g,0.0, b.getPosition());
 
 		}
 

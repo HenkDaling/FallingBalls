@@ -29,17 +29,17 @@ void Object::show(){
     IsVissable = true;
 }
 
-void Object::updatePosition(const point &pos){
+void Object::updatePosition(const point2D &pos){
     this->position = pos;
     boundry.updatePosition(pos);
 }
 
-void Object::rotate(double angleInRadians, const point & pivot)
+void Object::rotate(double angleInRadians, const point2D & pivot)
 {
     boundry.rotate(angleInRadians,pivot);
 }
 
-point Object::getPosition() const {
+point2D Object::getPosition() const {
     return position;
 }
 
@@ -47,7 +47,7 @@ polygon Object::getBoundry() const{
     return boundry;
 }
 
-void Object::setLocation(const point p){
+void Object::setLocation(const point2D p){
     updatePosition(p);
 }
 
@@ -60,12 +60,12 @@ void Object::setText(const string text)
     this->text = text;
 }
 
-void Object::setTextLocation(point & p)
+void Object::setTextLocation(point2D & p)
 {
     textPosition = p;
 }
 
-void Object::drawImage(SDL_Plotter &g, double angle  , point pivot ){
+void Object::drawImage(SDL_Plotter &g, double angle  , point2D pivot ){
     draw::drawImagePixels(position, img, g, angle, pivot);
 }
 

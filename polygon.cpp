@@ -5,7 +5,7 @@ polygon::polygon(){
     poly.clear();                
 };
 
-polygon::polygon(vector<point> points, point pos){
+polygon::polygon(vector<point2D> points, point2D pos){
     poly = points;
     position = pos;
 }
@@ -14,18 +14,18 @@ polygon::~polygon(){
 
 }
 
-void polygon::updatePosition(const point &pos){
-    point diff;
+void polygon::updatePosition(const point2D &pos){
+    point2D diff;
     diff = pos - position;
 
-    for(point &p : poly){
+    for(point2D &p : poly){
         p = p+diff;
     }
 
     position = pos;
 }
 
-void polygon::rotate(double angleInRadians, const point & pivot)
+void polygon::rotate(double angleInRadians, const point2D & pivot)
 {
     
      for (size_t i = 0; i < poly.size(); ++i) {
@@ -33,13 +33,13 @@ void polygon::rotate(double angleInRadians, const point & pivot)
     }
 }
 
-void polygon::addPoint(point p){
+void polygon::addPoint(point2D p){
     poly.push_back(p);
 }
 
-void polygon::removePoint(point p){
+void polygon::removePoint(point2D p){
     int i = 0;
-    for(point x : poly){
+    for(point2D x : poly){
         if(x==p){
             poly.erase(poly.begin() + i);
         }
@@ -47,27 +47,27 @@ void polygon::removePoint(point p){
     }
 }
 
-const vector<point>& polygon::getPoints() const {
+const vector<point2D>& polygon::getPoints() const {
     return poly;
 }
 
-point polygon::calculateCenter(){
+point2D polygon::calculateCenter(){
     int numPoints = poly.size();
     double sumX = 0.0, sumY = 0.0;
 
-    for (const point& point : poly) {
+    for (const point2D& point : poly) {
         sumX += point.x;
         sumY += point.y;
     }
 
-    return point(sumX / numPoints, sumY / numPoints);
+    return point2D(sumX / numPoints, sumY / numPoints);
 }
 
-polygon polygon::makeEquilateralTriangle(point midpoint, double side){
+polygon polygon::makeEquilateralTriangle(point2D midpoint, double side){
     polygon pol;
     pol.poly.clear();
 
-    point p1, p2, p3;
+    point2D p1, p2, p3;
     double h;
 
     h = (side/2)* tan(45);
@@ -81,17 +81,17 @@ polygon polygon::makeEquilateralTriangle(point midpoint, double side){
     p3.x = midpoint.x+ 0.5*side;
     p3.y = midpoint.y - 0.5*h;
 
-    pol.poly = vector<point>{p1, p2, p3};
+    pol.poly = vector<point2D>{p1, p2, p3};
 
     return pol;
 
 }
 
-polygon polygon::makeCornerSquare(point corner, double width, double height){
+polygon polygon::makeCornerSquare(point2D corner, double width, double height){
     polygon pol;
     pol.poly.clear();
 
-    point p1,p2,p3,p4;
+    point2D p1,p2,p3,p4;
 
     p1 = corner;
 
@@ -104,17 +104,17 @@ polygon polygon::makeCornerSquare(point corner, double width, double height){
     p4 = corner;
     p4.y -= height;
 
-    pol.poly = vector<point>{p1,p2,p3,p4};
+    pol.poly = vector<point2D>{p1,p2,p3,p4};
 
     return pol;
 
 }
 
-polygon polygon::makeCenterSquare(point midpoint, double width, double height){
+polygon polygon::makeCenterSquare(point2D midpoint, double width, double height){
     polygon pol;
     pol.poly.clear();
 
-    point p1,p2,p3,p4;
+    point2D p1,p2,p3,p4;
     double w,h;
 
     w = 0.5*width;
@@ -132,18 +132,18 @@ polygon polygon::makeCenterSquare(point midpoint, double width, double height){
     p4.x = midpoint.x - w;
     p4.y = midpoint.y - h;
 
-    pol.poly = vector<point>{p1,p2,p3,p4};
+    pol.poly = vector<point2D>{p1,p2,p3,p4};
     return pol;
 }
 
-polygon polygon::makeCircle(point midpoint, double radius, unsigned int resolution){
+polygon polygon::makeCircle(point2D midpoint, double radius, unsigned int resolution){
     polygon pol;
 
     double angle = 2 * M_PI / static_cast<double>(resolution); 
     double theta = 0;
     double x;
     double y;
-    point p;
+    point2D p;
 
     for (unsigned int i = 0; i < resolution; i++) {
         theta = angle * i;
@@ -163,11 +163,11 @@ bool polygon::intersects(const polygon& other, Vector2D &angle) {
     
     bool intersect = false;
     int intersectCount = 0;
-    vector<point> ipoints;
+    vector<point2D> ipoints;
 
     angle = Vector2D();
 
-    for (const point& vertex : other.getPoints()) {
+    for (const point2D& vertex : other.getPoints()) {
 
         if (this->intersects(vertex)) {
             intersect = true;
@@ -186,7 +186,7 @@ bool polygon::intersects(const polygon& other, Vector2D &angle) {
         
     if(!intersect){
         
-        for (const point& vertex : getPoints()) {
+        for (const point2D& vertex : getPoints()) {
             if (other.intersects(vertex)) {
                 intersect = true;
                 if(intersectCount == 0){
@@ -204,17 +204,17 @@ bool polygon::intersects(const polygon& other, Vector2D &angle) {
     return intersect;
 }
 
-bool polygon::intersects(const point& p) const {
+bool polygon::intersects(const point2D& p) const {
 
     //reference : https://en.wikipedia.org/wiki/Point_in_polygon
     
     int intersectCount = 0;
-    const std::vector<point>& vertices = getPoints();
+    const vector<point2D>& vertices = getPoints();
     size_t numVertices = vertices.size();
 
     for (size_t i = 0; i < numVertices; ++i) {
-        const point& v1 = vertices[i];
-        const point& v2 = vertices[(i + 1) % numVertices];
+        const point2D& v1 = vertices[i];
+        const point2D& v2 = vertices[(i + 1) % numVertices];
 
         if ((v1.y <= p.y && p.y < v2.y) || (v2.y <= p.y && p.y < v1.y)) {
            
@@ -231,11 +231,11 @@ bool polygon::intersects(const point& p) const {
 }
 
 
-Vector2D polygon::angleOfIntersect(const point& intersectionPoint,const polygon* p) const{
+Vector2D polygon::angleOfIntersect(const point2D& intersectionPoint,const polygon* p) const{
     int index = p->getIndex(intersectionPoint);
 
-    const point& vertex1 = p->getPoints()[(index + p->getPoints().size() - 1) % p->getPoints().size()]; //prev
-    const point& vertex2 = p->getPoints()[(index + 1) % p->getPoints().size()]; //next
+    const point2D& vertex1 = p->getPoints()[(index + p->getPoints().size() - 1) % p->getPoints().size()]; //prev
+    const point2D& vertex2 = p->getPoints()[(index + 1) % p->getPoints().size()]; //next
 
     Vector2D vector1 = Vector2D::createFromCartesian(intersectionPoint.x - vertex1.x, intersectionPoint.y - vertex1.y);
     Vector2D vector2 = Vector2D::createFromCartesian(intersectionPoint.x - vertex2.x , intersectionPoint.y - vertex2.y );
@@ -249,7 +249,7 @@ Vector2D polygon::angleOfIntersect(const point& intersectionPoint,const polygon*
     return normal;
 }
 
-int polygon::getIndex(const point& p) const {
+int polygon::getIndex(const point2D& p) const {
     int r = -1;
     for (int i = 0; i < poly.size(); ++i) {
         if (poly[i] == p) {

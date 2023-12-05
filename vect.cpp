@@ -87,15 +87,15 @@ void Vector2D::normalize() {
     }
 }
 
-point Vector2D::rotate(double angleInRadians,const point &p, const point &pivot)
+point2D Vector2D::rotate(double angleInRadians,const point2D &p, const point2D &pivot)
 {
+    point2D rotatedPoint;
     double tX = p.x - pivot.x;
     double tY = p.y - pivot.y;
 
     double rX = tX * cos(angleInRadians) - tY * sin(angleInRadians);
     double rY = tX * sin(angleInRadians) + tY * cos(angleInRadians);
 
-    point rotatedPoint;
     rotatedPoint.x = rX + pivot.x;
     rotatedPoint.y = rY + pivot.y;
 

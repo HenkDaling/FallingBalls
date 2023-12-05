@@ -8,7 +8,7 @@ public:
     unsigned int bytesPerPixel;
     unsigned char* pixelData;
 
-    Image(){};
+    Image() : width(0), height(0), bytesPerPixel(0), pixelData(nullptr) {}
 
     template <typename T> Image(const T& image) {
         width = image.width;
@@ -17,18 +17,17 @@ public:
 
         size_t dataSize = width * height * bytesPerPixel;
 
-        // Allocate memory for pixel data
         pixelData = new unsigned char[dataSize];
 
-        // Copy the pixel data
         for (size_t i = 0; i < dataSize; ++i) {
             pixelData[i] = image.pixel_data[i];
         }
     }
 
     ~Image() {
-        
-        pixelData = nullptr;       
+        if (pixelData != nullptr) {
+            //delete[] pixelData;
+        }
     }
 
     void displayInfo() const;

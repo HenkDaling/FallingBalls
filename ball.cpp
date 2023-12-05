@@ -2,7 +2,7 @@
 
 using namespace std::chrono;
 
-ball::ball(point pos,Vector2D force)
+ball::ball(point2D pos,Vector2D force)
 {
     this->updatePosition(pos);
     mass = 1;
@@ -23,7 +23,7 @@ ball::~ball()
 
 void ball::update(uint64_t deltaTime) {
     uint64_t t =  deltaTime;
-    point pos = this->getPosition();
+    point2D pos = this->getPosition();
 
     deltaTime = deltaTime - time;
 
@@ -51,7 +51,7 @@ void ball::handleContCollisions(Object& other) {
 
         cout << "collision handler ball" << endl;
 
-        point pos = this->getPosition();
+        point2D pos = this->getPosition();
 
         Vector2D separationVector = Vector2D::createFromPolar(1.0, CollisionAngle);
 
@@ -72,13 +72,13 @@ void ball::handleContCollisions(Object& other) {
         Vector2D reflection = velocity - (normalVector * (dotProduct * 2.0));
 
         // Update the velocity of the ball
-        velocity = reflection * 0.8 ;    
+        velocity = reflection * 1.0 ;    
         
 }
 
 
 void ball::display(std::ostream& os) const {
-        point position = getPosition();
+        point2D position = getPosition();
         os << "Position: (" << position.x << ", " << position.y << ")" << std::endl;
         os << "Velocity: (" << velocity.getX() << ", " << velocity.getY() << ")" << std::endl;
         os << "Acceleration: (" << acceleration.getX() << ", " << acceleration.getY() << ")" << std::endl;
@@ -87,5 +87,10 @@ void ball::display(std::ostream& os) const {
 
 void ball::applyForce(Vector2D F){
     netForce = netForce + F;
+}
+
+void ball::giveVelocity(Vector2D V)
+{
+    velocity = V;
 }
 

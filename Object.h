@@ -16,8 +16,8 @@ enum drawMode{
 class Object
 {
 private:
-    point position;
-    point textPosition;
+    point2D position;
+    point2D textPosition;
     double Theta_rotation;
 protected:
     Image img;
@@ -34,19 +34,19 @@ public:
     void hide();
     void show();
 
-    void updatePosition(const point &pos);
-    void rotate(double angleInRadians, const point &pivot);
+    void updatePosition(const point2D &pos);
+    void rotate(double angleInRadians, const point2D &pivot);
 
-    point getPosition() const;
+    point2D getPosition() const;
     polygon getBoundry() const;
     string getText() const;
 
-    void setLocation(const point p);
+    void setLocation(const point2D p);
     void setBoundry(polygon p);
     void setText(const string text);
-    void setTextLocation(point &p);
+    void setTextLocation(point2D &p);
 
-    void drawImage(SDL_Plotter &g, double angle = 0 , point pivot = point());
+    void drawImage(SDL_Plotter &g, double angle = 0 , point2D pivot = point2D());
     void drawPolygon(){};
     void drawObject(SDL_Plotter &g,drawMode mode, color = color());
     void drawText(SDL_Plotter &g);
@@ -54,7 +54,7 @@ public:
     virtual void handleCollision(Object& other); //so it can be overided for different types of object
 
 
-    bool isInside(point &p){
+    bool isInside(point2D &p){
         //cout << p.x << " " << p.y <<endl;
         return boundry.intersects(p);
     }

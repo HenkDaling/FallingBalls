@@ -17,11 +17,16 @@ public:
 
 static color convertToColor(Uint32 c) {
     color result;
+    Uint8 r,g,b;
 
-    // Extract R, G, and B components using bit manipulation
-    result.R = (c & 0xFF0000) >> 16;
-    result.G = (c & 0x00FF00) >> 8;
-    result.B = c & 0x0000FF;
+    Uint8 alpha = (c >> 24) & 0xFF;
+    r = (c >> 16) & 0xFF;
+    g = (c >> 8) & 0xFF;
+    b = c & 0xFF;
+
+    result.R = r;
+    result.G = g;
+    result.B = b;
 
     return result;
 }
@@ -38,7 +43,7 @@ static void drawLine(int x1, int y1, int x2, int y2, SDL_Plotter &g,color c) {
     int err = dx - dy;
 
     while (!endOfLine) {
-        g.plotPixel(x1, y1,c.R,c.G,c.B,c.A);
+        g.plotPixel(x1, y1,c.R,c.G,c.B);
 
         if (x1 == x2 && y1 == y2) {
             endOfLine = true;
@@ -59,7 +64,7 @@ static void drawLine(int x1, int y1, int x2, int y2, SDL_Plotter &g,color c) {
     }
 }
 
-static void drawOutline(vector<point> points, SDL_Plotter &g,color c) {
+static void drawOutline(vector<point2D> points, SDL_Plotter &g,color c) {
     
     for (size_t i = 0; i < points.size() - 1; ++i) {
         if (points.at(i).x >= 0 && points.at(i).x < g.getCol() && points.at(i).y >= 0 && points.at(i).y < g.getRow()) {
@@ -71,10 +76,10 @@ static void drawOutline(vector<point> points, SDL_Plotter &g,color c) {
     
 }
 
-static void drawFillPolygon(vector<point> points, SDL_Plotter &g,color c) {
+static void drawFillPolygon(vector<point2D> points, SDL_Plotter &g,color c) {
 
     double minY = points[0].y, maxY = points[0].y;
-    for (const auto& point : points) {
+    for (point2D& point : points) {
         minY = std::min(minY, point.y);
         maxY = std::max(maxY, point.y);
     }
@@ -82,13 +87,13 @@ static void drawFillPolygon(vector<point> points, SDL_Plotter &g,color c) {
     for (double y = minY; y <= maxY; ++y) {
         std::vector<double> intersections;
 
-        // Find intersections with each edge
+        // Find intersections 
         for (size_t i = 0; i < points.size(); ++i) {
-            const point& p1 = points[i];
-            const point& p2 = points[(i + 1) % points.size()];
+            const point2D& p1 = points[i];
+            const point2D& p2 = points[(i + 1) % points.size()];
 
             if ((p1.y <= y && p2.y > y) || (p2.y <= y && p1.y > y)) {
-                // Edge crosses the scanline, calculate the intersection point
+                // Edge crosses the scanline
                 double x = p1.x + (y - p1.y) * (p2.x - p1.x) / (p2.y - p1.y);
                 intersections.push_back(x);
             }
@@ -105,9 +110,9 @@ static void drawFillPolygon(vector<point> points, SDL_Plotter &g,color c) {
 }
 
 
-static void drawImagePixels(point position, Image &img, SDL_Plotter &g, double angle = 0, point pivot = point()){
+static void drawImagePixels(point2D position, Image &img, SDL_Plotter &g, double angle = 0, point2D pivot = point2D(), color DontDraw = color(5,255,255)){
     int index = 0;
-    point translated;
+    point2D translated;
 
     double drawX,drawY;
     int rd;
@@ -118,24 +123,29 @@ static void drawImagePixels(point position, Image &img, SDL_Plotter &g, double a
         drawY = y;
         for (double x = position.x; x < position.x + img.width; ++x) {
             drawX = x;
-            if (x >= 0 && x < g.getCol() && y >= 0 && y < g.getRow()) {
+
+            if(angle != 0){
+                translated = point2D(x, y);
+                translated = Vector2D::rotate(angle, translated, pivot);
+                drawX = translated.x;
+                drawY = translated.y;
+            }
+            if (drawX >= 0 && drawX < g.getCol() && drawY >= 0 && drawY < g.getRow()) {
                 rd = img.pixelData[index++];
                 gn = img.pixelData[index++];
                 bl = img.pixelData[index++];
 
-                if(angle != 0){
-                    translated = Vector2D::rotate(angle, point(x,y), pivot);
-                    drawX = translated.x;
-                    drawY = translated.y;
-                }
-
                 if(img.bytesPerPixel == 4){
-                    int a = img.pixelData[index++];
-                    g.plotPixel(drawX, drawY, rd, gn, bl, a);
+                    //SDL PLOTTER DOES NOT PROVIDE ALPHA CHANNEL
+                    //Not allowed to add one
+                    index++;
+                    //img.pixelData[index++];
+                    //g.plotPixel(drawX, drawY, rd, gn, bl, a);  //would use if had alpha
+                    g.plotPixel(drawX, drawY, rd, gn, bl);   
                 }
                 else{
                     g.plotPixel(drawX, drawY, rd, gn, bl);   
-                }
+                }   
             } else {
                 index += (img.bytesPerPixel == 4) ? 4 : 3;
             }
@@ -144,8 +154,10 @@ static void drawImagePixels(point position, Image &img, SDL_Plotter &g, double a
 
 }
 
-static void drawText(point position, string text, SDL_Plotter &g, double angle = 0, point pivot = point()){
-    g.plotText(position.x, position.y, text);
+static void drawText(point2D position, string text, SDL_Plotter &g, double angle = 0, point2D pivot = point2D()){
+    //change
+    
+    //g.plotText(position.x, position.y, text);
 }
 
 private:

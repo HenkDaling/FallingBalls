@@ -6,49 +6,49 @@
 
 using namespace std;
 
-//Point
-struct point{
+//point2D
+struct point2D{
    double x,y;
 
-   point(const point& p){
+   point2D(const point2D& p){
        *this = p;
    }
 
-   point(double x = 0, double y = 0){
+   point2D(double x = 0, double y = 0){
       this->x = x;
       this->y = y;
    }
 
-   point& operator= (const point& p){
+   point2D& operator= (const point2D& p){
        x = p.x;
        y = p.y;
        return *this;
    }
 
-    point operator-(const point& p) const {
-        point rp;
+    point2D operator-(const point2D& p) const {
+        point2D rp;
         rp.x = x - p.x;
         rp.y = y - p.y;
         return rp;
     }
 
-    point operator+(const point& p) const {
-        point rp;
+    point2D operator+(const point2D& p) const {
+        point2D rp;
         rp.x = x + p.x;
         rp.y = y + p.y;
         return rp;
     }
 
-   bool operator== (const point& p){
+   bool operator== (const point2D& p){
         return x==p.x && y==p.y;
    }
 
-   bool operator==(const point &p) const { 
+   bool operator==(const point2D &p) const { 
         return x == p.x && y == p.y;
     }
 
     
-   double distance(point p) const{
+   double distance(point2D p) const{
        return sqrt(pow(x - p.x, 2) + pow(y - p.y, 2));
    }
 };
@@ -83,7 +83,7 @@ public:
     Vector2D perpendicular() const;
     void normalize();
 
-    static point rotate(double angleInRadians,const point &p, const point &pivot);
+    static point2D rotate(double angleInRadians,const point2D &p, const point2D &pivot);
 
     // Overloaded operators
     Vector2D operator+(const Vector2D& other) const;

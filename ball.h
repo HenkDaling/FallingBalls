@@ -28,10 +28,12 @@ private:
     uint64_t time;
 
 public:
-    ball(point pos,Vector2D force);
+    ball(point2D pos,Vector2D force);
     ~ball();
 
     void applyForce(Vector2D F);
+
+    void giveVelocity(Vector2D V);
     void update(uint64_t deltaTime);
 
     using Object::handleCollision;
