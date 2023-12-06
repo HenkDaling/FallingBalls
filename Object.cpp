@@ -65,8 +65,8 @@ void Object::setTextLocation(point2D & p)
     textPosition = p;
 }
 
-void Object::drawImage(SDL_Plotter &g, double angle  , point2D pivot ){
-    draw::drawImagePixels(position, img, g, angle, pivot);
+void Object::drawImage(SDL_Plotter &g, double angle  , point2D pivot, const color &DontDraw){
+    draw::drawImagePixels(position, img, g, angle, pivot, DontDraw);
 }
 
 void Object::drawText(SDL_Plotter &g)

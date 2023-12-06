@@ -17,8 +17,8 @@ ball::ball(point2D pos,Vector2D force)
     
     netForce = force;
 
-    acceleration = Vector2D::createFromCartesian(0, 0);
-    velocity = Vector2D::createFromCartesian(2,1);
+    acceleration =  Vector2D(netForce.getMagnitude() / mass, netForce.getAngle());
+    velocity = Vector2D::createFromCartesian(0,0);
 
     img = Image(beachBall);
     time =  0;
@@ -82,6 +82,11 @@ void ball::handleContCollisions(Object& other) {
         // Update the velocity of the ball
         velocity = reflection * 1.0 ;    
         
+}
+
+void ball::setForce(Vector2D F)
+{
+    netForce = F;
 }
 
 

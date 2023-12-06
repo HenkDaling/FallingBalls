@@ -277,5 +277,4 @@ bool SDL_Plotter::getMouseMotion(int& x, int& y){
 
 void SDL_Plotter::getMouseLocation(int& x, int& y){
     SDL_GetMouseState( &x, &y );
-    cout << x << " " << y << endl;
 }

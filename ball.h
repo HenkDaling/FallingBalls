@@ -33,6 +33,7 @@ public:
     ~ball();
 
     void applyForce(Vector2D F);
+    void setForce(Vector2D F);
 
     void giveVelocity(Vector2D V);
     void update(uint64_t deltaTime);

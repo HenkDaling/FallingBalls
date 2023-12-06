@@ -37,6 +37,16 @@ bool obstacle::isDead() const
 
 }
 
+bool obstacle::isTop() const
+{
+    if(getPosition().y < 0){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
 void obstacle::drawObstacle(SDL_Plotter &g)
 {
     if(IsVissable){

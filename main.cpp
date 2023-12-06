@@ -12,6 +12,14 @@ int main(int argc, char ** argv)
 	// Start SDL Plotter
 	SDL_Plotter g(800,840);
 
+	//seven segment
+	point2D location = point2D(0,0);
+	double width, hight;
+	width = 50;
+	hight = 80;
+	Object s1,s2,s3,s4,s5,s6,s7;
+
+
 	game fallingBalls(g);
 	gameState state;
 

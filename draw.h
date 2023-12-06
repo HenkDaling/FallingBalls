@@ -110,7 +110,7 @@ static void drawFillPolygon(vector<point2D> points, SDL_Plotter &g,color c) {
 }
 
 
-static void drawImagePixels(point2D position, Image &img, SDL_Plotter &g, double angle = 0, point2D pivot = point2D(), color DontDraw = color(5,255,255)){
+static void drawImagePixels(point2D position, Image &img, SDL_Plotter &g, double angle = 0, point2D pivot = point2D(), color DontDraw = color(255,0,255)){
     int index = 0;
     point2D translated;
 
@@ -135,17 +135,17 @@ static void drawImagePixels(point2D position, Image &img, SDL_Plotter &g, double
                 gn = img.pixelData[index++];
                 bl = img.pixelData[index++];
 
-                if(img.bytesPerPixel == 4){
-                    //SDL PLOTTER DOES NOT PROVIDE ALPHA CHANNEL
-                    //Not allowed to add one
-                    index++;
-                    //img.pixelData[index++];
-                    //g.plotPixel(drawX, drawY, rd, gn, bl, a);  //would use if had alpha
-                    g.plotPixel(drawX, drawY, rd, gn, bl);   
-                }
-                else{
-                    g.plotPixel(drawX, drawY, rd, gn, bl);   
-                }   
+                if(img.bytesPerPixel == 4){ index++; }
+
+                if(!(color(rd,gn,bl) == DontDraw)){ //SDL PLOTTER DOES NOT PROVIDE ALPHA CHANNEL
+                    if(img.bytesPerPixel == 4){    
+                        g.plotPixel(drawX, drawY, rd, gn, bl);   
+                    }
+                    else{
+                        g.plotPixel(drawX, drawY, rd, gn, bl);   
+                    }  
+                } 
+
             } else {
                 index += (img.bytesPerPixel == 4) ? 4 : 3;
             }

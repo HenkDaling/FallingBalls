@@ -12,6 +12,8 @@
 #include "images/background.c"
 #include "images/backgroundStart.c"
 #include "images/arrow.c"
+#include "images/banner.c"
+#include "images/quitButton.c"
 
 #include "obstacle.h"
 #include "Object.h"

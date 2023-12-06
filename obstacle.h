@@ -13,6 +13,7 @@ public:
     void setColor(color newColor);
     int getCount() const;
     bool isDead() const;
+    bool isTop() const;
 
     void drawObstacle(SDL_Plotter &g);
 
