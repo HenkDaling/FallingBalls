@@ -54,7 +54,7 @@ public:
     virtual void handleCollision(Object& other); //so it can be overided for different types of object
 
 
-    bool isInside(point2D &p){
+    bool isInside(const point2D &p){
         //cout << p.x << " " << p.y <<endl;
         return boundry.intersects(p);
     }

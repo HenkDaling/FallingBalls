@@ -14,7 +14,7 @@ struct point2D{
        *this = p;
    }
 
-   point2D(double x = 0, double y = 0){
+   point2D(const double x = 0, const double y = 0){
       this->x = x;
       this->y = y;
    }

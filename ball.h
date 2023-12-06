@@ -28,6 +28,7 @@ private:
     uint64_t time;
 
 public:
+    ball();
     ball(point2D pos,Vector2D force);
     ~ball();
 

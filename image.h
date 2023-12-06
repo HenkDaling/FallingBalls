@@ -1,6 +1,8 @@
 #ifndef IMAGE_H
 #define IMAGE_H
 
+#include <cstddef>
+
 class Image {
 public:
     unsigned int width;

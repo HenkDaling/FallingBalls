@@ -2,6 +2,14 @@
 
 using namespace std::chrono;
 
+ball::ball()
+{
+    this->updatePosition(point2D(0,0));
+    this->netForce = Vector2D::createFromCartesian(0,0);
+    this->acceleration = Vector2D::createFromCartesian(0,0);
+    time = 0;
+}
+
 ball::ball(point2D pos,Vector2D force)
 {
     this->updatePosition(pos);
