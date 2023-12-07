@@ -70,11 +70,6 @@ void Object::setBoundry(polygon p){
     boundry = p;
 }
 
-void Object::setText(const string text)
-{
-    this->text = text;
-}
-
 void Object::setTextLocation(point2D & p)
 {
     textPosition = p;

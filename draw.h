@@ -22,9 +22,22 @@ Date Last Modified: 12/6/23
 class draw
 {
 public:
+    //precondition: nothing
+    //postcondition: creates object
+    //return type: nothing
+    //description of function: default constructor
     draw();
+
+    //precondition: nothing
+    //postcondition: object is destroyed
+    //return type: nothing
+    //description of function: deletes object
     ~draw();
 
+    //precondition: 32 bit integer
+    //postcondition: returns new color
+    //return type: color
+    //description of function: assigns a new color
 static color convertToColor(Uint32 c) {
     color result;
     Uint8 r,g,b;
@@ -41,7 +54,10 @@ static color convertToColor(Uint32 c) {
     return result;
 }
 
-
+    //precondition: 4 ints, SDL_Plotter object, and a color
+    //postcondition: line is drawn on screen
+    //return type: nothing
+    //description of function: draws a line using color and points
 static void drawLine(int x1, int y1, int x2, int y2, SDL_Plotter &g,color c) {
 
     bool endOfLine = false;
@@ -74,6 +90,10 @@ static void drawLine(int x1, int y1, int x2, int y2, SDL_Plotter &g,color c) {
     }
 }
 
+    //precondition: vector of points, SDL_Plotter object, and color
+    //postcondition: outline of polygon
+    //return type: nothing
+    //description of function: draws the outline of polygon object
 static void drawOutline(vector<point2D> points, SDL_Plotter &g,color c) {
 
     for (size_t i = 0; i < points.size() - 1; ++i) {
@@ -86,6 +106,10 @@ static void drawOutline(vector<point2D> points, SDL_Plotter &g,color c) {
 
 }
 
+    //precondition: vector of points, SDL_Plotter, and color
+    //postcondition: object is filled
+    //return type: nothing
+    //description of function: draws the polygon
 static void drawFillPolygon(vector<point2D> points, SDL_Plotter &g,color c) {
 
     double minY = points[0].y, maxY = points[0].y;
@@ -119,7 +143,10 @@ static void drawFillPolygon(vector<point2D> points, SDL_Plotter &g,color c) {
     }
 }
 
-
+    //precondition: position point, image, SDL, angle, pivot point, color
+    //postcondition: displays image on screen
+    //return type: nothing
+    //description of function: draws an image object
 static void drawImagePixels(point2D position, Image &img, SDL_Plotter &g, double angle = 0, point2D pivot = point2D(), color DontDraw = color(255,0,255)){
     int index = 0;
     point2D translated;
@@ -162,12 +189,6 @@ static void drawImagePixels(point2D position, Image &img, SDL_Plotter &g, double
         }
     }
 
-}
-
-static void drawText(point2D position, string text, SDL_Plotter &g, double angle = 0, point2D pivot = point2D()){
-    //change
-
-    //g.plotText(position.x, position.y, text);
 }
 
 private:

@@ -21,6 +21,10 @@ public:
     unsigned int bytesPerPixel;
     unsigned char* pixelData;
 
+    //precondition: nothing
+    //postcondition: image object is created
+    //return type: nothing
+    //description of function: constructor of image
     Image() : width(0), height(0), bytesPerPixel(0), pixelData(nullptr) {}
     
     Image(unsigned int width, unsigned int height, unsigned int bpp, const unsigned char* srcPixelData) 
@@ -32,6 +36,10 @@ public:
 
     }
 
+    //precondition: image object
+    //postcondition: image template is created
+    //return type: nothing
+    //description of function: construct image template
     template <typename T> Image(const T& image) {
         width = image.width;
         height = image.height;
@@ -46,10 +54,18 @@ public:
         }
     }
 
+    //precondition: nothing
+    //postcondition: object is deleted
+    //return type: nothing
+    //description of function: deletes image object
     ~Image() {
            
     }   
 
+    //precondition: nothing
+    //postcondition: prints info to the screen
+    //return type: nothing
+    //description of function: displays image object information
     void displayInfo() const;
 };
 
