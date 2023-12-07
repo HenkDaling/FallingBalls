@@ -124,11 +124,6 @@ public:
     //description of function: calls draw functions
     void drawObject(SDL_Plotter &g,drawMode mode, color = color());
 
-    //precondition: SLD_Plotter object
-    //postcondition: displays text on plotter
-    //return type: nothing
-    //description of function: calls drawText
-    void drawText(SDL_Plotter &g);
 
     //precondition: object
     //postcondition: prints statement

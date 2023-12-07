@@ -79,11 +79,6 @@ void Object::drawImage(SDL_Plotter &g, double angle  , point2D pivot, const colo
     draw::drawImagePixels(position, img, g, angle, pivot, DontDraw);
 }
 
-void Object::drawText(SDL_Plotter &g)
-{
-    draw::drawText(textPosition , this->text, g, this->Theta_rotation, this->getPosition());
-
-}
 
 void Object::drawObject(SDL_Plotter &g, drawMode mode, color c){
 

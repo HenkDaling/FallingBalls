@@ -62,10 +62,6 @@ void obstacle::drawObstacle(SDL_Plotter &g)
     if(IsVissable){
         this->drawObject(g,draw_polygon_fill,c);
         this->drawObject(g,draw_polygon_outline, c);
-
-        this->setText(to_string(count));
-
-        drawText(g);
     }
 }
 
