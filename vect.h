@@ -39,9 +39,6 @@ struct point2D{
         return rp;
     }
 
-   bool operator== (const point2D& p){
-        return x==p.x && y==p.y;
-   }
 
    bool operator==(const point2D &p) const { 
         return x == p.x && y == p.y;

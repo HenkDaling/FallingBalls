@@ -29,6 +29,11 @@ void Object::show(){
     IsVissable = true;
 }
 
+bool Object::isVisable()
+{
+    return IsVissable;
+}
+
 void Object::updatePosition(const point2D &pos){
     this->position = pos;
     boundry.updatePosition(pos);

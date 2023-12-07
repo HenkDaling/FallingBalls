@@ -27,10 +27,8 @@ public:
     }
 
     ~Image() {
-        if (pixelData != nullptr) {
-            //delete[] pixelData;
-        }
-    }
+    
+    }   
 
     void displayInfo() const;
 };

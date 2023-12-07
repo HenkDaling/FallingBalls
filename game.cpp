@@ -59,8 +59,8 @@ game::~game()
 }
 
 void game::generateLevel (int level,vector<obstacle> &o ){
-        int count = level + level / 2;
-        for(int i = 0; (i < count ) && (i < 10); i++){
+
+        for(int i = 0; (i < 4); i++){
             obstacle newO;
 
             int randomX = rand() % 720 + 40;
@@ -108,79 +108,40 @@ void game::moveUp(vector<obstacle> &o){
 
 }
 
-float perlin(float x) {
-    // Hash function (replace with a better hash function if needed)
-    auto hash = [](int x) {
-        return (x << 13) ^ x;
-    };
-
-    // Fade function
-    auto fade = [](float t) {
-        return t * t * t * (t * (t * 6 - 15) + 10);
-    };
-
-    // Lerp function
-    auto lerp = [](float t, float a, float b) {
-        return a + t * (b - a);
-    };
-
-    // Gradient function
-    auto grad = [](int hash, float x) {
-        int h = hash & 15;
-        float grad = 1.0 + (h & 7); // Gradient value 1-8
-        if (h & 8) grad = -grad;    // Randomly invert half of them
-        return (grad * x);         // This is the key part where we multiply the gradient with the distance
-    };
-
-    // Calculate grid coordinates
-    int X = static_cast<int>(floor(x)) & 255;
-    x -= floor(x);
-    float u = fade(x);
-
-    // Calculate the Perlin noise value
-    return lerp(u, grad(hash(X), x), grad(hash(X + 1), x - 1)) * 2;
-}
-
 gameState game::playingGame(SDL_Plotter &g){
 	gameState nextState;
 	bool pause = false;
 	bool gameOver = false;
 
+	Image bPause = Image(pauseButton);
+	Object buttonPause(bPause);
+	Image bQuit = Image(quitButton);
+	Object buttonQuit(bQuit);
+	Image bgImage(backgroundImg);
 	double a = 0.001;
-    
+	int mouseX, mouseY;
+    Vector2D direction;   
+	vector<obstacle> valid;
+
 	dt = dt + 1;
 
 	g.clear();
-
-	//Background test:
-	//    for (int y = 0; y < 800; y++) {
-    //     for (int x = 0; x < 840; x++) {
-    //         // Calculate color based on position
-    //         double gradientFactor = static_cast<double>(y) / 800; // Gradient based on vertical position
-
-	// 		gradientFactor = (x^2 + y^2 ) / 255;
-
-    //         // Retro-style colors
-    //         int red = static_cast<int>(255 * gradientFactor);
-    //         int green = static_cast<int>(165 + 90 * gradientFactor);
-    //         int blue = static_cast<int>(255 - 255 * gradientFactor);
-
-    //         // Draw pixel
-    //         g.plotPixel(x, y, red, green, blue);
-    //     }
-	//    }
-
+	draw::drawImagePixels(point2D(0,0), bgImage,g);
 
     for (size_t i = 0; i < obst.size(); i++) {
         if (obst.at(i).isDead()) {
             obst.at(i).hide();
-    	} 
-		if (obst.at(i).isTop()){
+    	}else{
+			valid.push_back(obst.at(i));
+			if (obst.at(i).isTop()){
 			gameOver = true;
 		}
+		}
     }
+	obst.clear();
+	obst.insert(obst.begin(), valid.begin(), valid.end());
 
-	if(b.getPosition().y > 800){
+	if((b.getPosition().y > 800)){
 		level++;
         moveUp(obst);
         generateLevel(level, obst);
@@ -191,10 +152,6 @@ gameState game::playingGame(SDL_Plotter &g){
 
 	}
 
-    //Draw direction arrow
-    int mouseX, mouseY;
-    Vector2D direction;
-
     arrowPos = directionArrow.getPosition();
     arrowPos.y = arrowPos.y + 0.5*arrow.height;
 
@@ -203,13 +160,6 @@ gameState game::playingGame(SDL_Plotter &g){
     
     directionArrow.drawImage(g,direction.getAngle() ,arrowPos, color(255,255,255));
     draw::drawFillPolygon(polygon::makeCircle(arrowPos,20,20).getPoints(),g, color(255,0,0));
-
-	//Draw buttons 
-	Image bPause = Image(pauseButton);
-	Object buttonPause(bPause);
-
-	Image bQuit = Image(quitButton);
-	Object buttonQuit(bQuit);
 
 	buttonPause.setLocation(point2D(750,10));
 	buttonPause.setBoundry(polygon::makeCornerSquare(buttonPause.getPosition(), 75, -75)) ;
@@ -224,7 +174,6 @@ gameState game::playingGame(SDL_Plotter &g){
     if(g.mouseClick()){
 		int x,y;
 		g.getMouseLocation(x, y);
-
 		b.applyForce(Vector2D(6, directions.up));
 
 		if(buttonPause.isInside(point2D(x,y))){
@@ -246,7 +195,6 @@ gameState game::playingGame(SDL_Plotter &g){
 	
 	b.update(dt);
 	b.drawImage(g,0, b.getBoundry().calculateCenter(), color(255,255,255));
-    //b.drawObject(g,draw_polygon_outline,color(255,0,0));
 
     for(Object &wall : walls){
         wall.drawObject(g,draw_polygon_fill,color(0,200,200));
@@ -254,11 +202,7 @@ gameState game::playingGame(SDL_Plotter &g){
     }
 
 	for (size_t i = 0; i < obst.size(); i++) {
-		point2D center;
 		obst.at(i).rotate(a,obst.at(i).getPosition());
-		center = obst.at(i).getPosition();
-		center = center - point2D(10,20) ;
-		obst.at(i).setTextLocation(center);
 		obst.at(i).drawObstacle(g);
     }
 
@@ -273,14 +217,6 @@ gameState game::playingGame(SDL_Plotter &g){
         }
 
     }
-
-    // static uint64_t s5;
-    // if( duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count() - s5 > 4000){
-    //     level++;
-    //     moveUp(obst);
-    //     generateLevel(level, obst);
-    //     s5 = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-    // }
 
 	buttonPause.drawImage(g);
 	buttonQuit.drawImage(g);
@@ -327,9 +263,9 @@ gameState game::pauseGame(SDL_Plotter &g){
 	}
 
 	
-	draw::drawImagePixels(point2D(80,200), banner, g, 0, point2D(), color(255,0,255));
 	static double dt = 0;
 	static bool init = false;
+	static bool inits = false;
 	dt += 1;
 	static Uint32 *screen = new Uint32[800*840];
 	
@@ -343,73 +279,79 @@ gameState game::pauseGame(SDL_Plotter &g){
 	}
 
 	
+	if(!inits){
 	for (int y = 0; y < 800; y++) {
 		for (int x = 0; x < 840; x++) {
-			// Calculate color based on position
-			double gradientFactor = static_cast<double>(y) / 800; // Gradient based on vertical position
-			Uint32 bg = screen[y * 800 + x];
-
-			//gradientFactor = cos((y/(rand()%8 + 3) - dt) * -1 );
-
-			gradientFactor *=  (cos(((x-420) / 420.0) * (3.14/2.0))) * 0.5;
-			gradientFactor *=  (cos(((y-400) / 400.0) * (3.14/2.0))) * 0.5;
-
-			//bg *= gradientFactor;
-
-			//red = static_cast<int>(0);
-			//green = static_cast<int>( 90 * gradientFactor);
-			//blue = static_cast<int>(0);
-
-			int red = (bg >> 16) & 0xFF;
-			int green = (bg >> 8) & 0xFF;
-			int blue = (bg & 0xFF);
-
-			red = ((bg >> 16) & 0xFF) * gradientFactor * 2 ;
-			green = ((bg >> 8) & 0xFF) * gradientFactor * 2 ;
-			blue = ((bg & 0xFF)) * gradientFactor * 2 ;
-
-			// Draw pixel
-			g.plotPixel(x, y, red, green, blue);
+			screen[y * 800 + x]	= g.getColor(x,y);		
 		}
 	}
+		inits = true;
+	}
 
+	
+	for (int y = 0; y < 800; y++) {
+	for (int x = 0; x < 840; x++) {
+		// Calculate color based on position
+		double gradientFactor = 1;
+		double fadeFactor = 1;
+		Uint32 bg = screen[y * 800 + x];
+
+		gradientFactor = cos((y/(rand()%8 + 3) - dt) * -1 );
+
+		int red = (bg >> 16) & 0xFF ;
+		int green = (bg >> 8) & 0xFF;
+		int blue = (bg & 0xFF);
+
+		red =  red;
+		green = green;
+		blue =  blue;
+
+		int ga = static_cast<int>(0.299 * red + 0.587 * green + 0.114 * blue) * gradientFactor * 0.5;
+
+		double drawY = y + gradientFactor ;
+		
+		if(x >= 0 && drawY >= 0 && x < 840 && drawY < 800){
+			//Draw pixel
+			g.plotPixel(x, drawY, ga, ga, ga);
+		}
+	}
+	}
+
+	draw::drawImagePixels(point2D(80,200), banner, g, 0, point2D(), color(255,0,255));
 	startButton.drawObject(g,draw_image);
 
 	return nextState;
 }
 
 gameState game::gameOver(SDL_Plotter &g){
-	gameState nextState = game_paused;
+	gameState nextState = game_gameOver;
+
+	//Back to defaults:
+	obst.clear();
+	level = 1;
 
 	//data abstraction
 	Image sButtonImage(ButtonImg);
 	Object startButton(sButtonImage);
-	point2D mouseClick;
+	Image bannerGameOver(gameOverImg);
 
-	point2D buttonLoc(330, 340);
-	point2D textLoc = buttonLoc + point2D(60,30);
-	startButton.setLocation(buttonLoc);
-	startButton.setTextLocation(textLoc);
-	startButton.setBoundry(polygon::makeCornerSquare(point2D(330,350),200,-80));
-
-	if(g.mouseClick()){
-		
-		point mouse = g.getMouseClick();
-		mouseClick.x = mouse.x;		
-		mouseClick.y = mouse.y;	
-
-		if(startButton.isInside(mouseClick)){
-			nextState = game_run;
-		}
-
-		g.getMouseClick();
-	}
-
-		static double dt = 0;
+	double gradientFactor; // Gradient based on vertical position
+	double fadeFactor;
+	Uint32 bg;
+	static double dt = 0;
 	static bool init = false;
-	dt += 1;
 	static Uint32 *screen = new Uint32[800*840];
-	
+
+	point2D mouseClick;
+	point2D buttonLoc(330, 500);
+
+	point mouse;
+
+	dt += 1;
+
+	draw::drawImagePixels(point2D(100, 200), bannerGameOver, g,0,point2D());
+	//Initialization
+
 	if(!init){
 		obst.clear();
 
@@ -421,37 +363,49 @@ gameState game::gameOver(SDL_Plotter &g){
 		init = true;
 	}
 
+	startButton.setLocation(buttonLoc);
+	startButton.setBoundry(polygon::makeCornerSquare(buttonLoc,200,-80));
+
+	//Input
+			if(g.mouseClick()){
+			mouse = g.getMouseClick();
+			mouseClick.x = mouse.x;		
+			mouseClick.y = mouse.y;	
+				if(startButton.isInside(mouseClick)){
+					nextState = game_run;
+				}
+		g.getMouseClick();
+	}
 	
+	//Output
+
 	for (int y = 0; y < 800; y++) {
-	for (int x = 0; x < 840; x++) {
-		// Calculate color based on position
-		double gradientFactor = static_cast<double>(y) / 800; // Gradient based on vertical position
-		Uint32 bg = screen[y * 800 + x];
+		for (int x = 0; x < 840; x++) {
+			// Calculate color based on position
+			gradientFactor = static_cast<double>(y) / 800; // Gradient based on vertical position
+			bg = screen[y * 800 + x];
 
-		gradientFactor = cos((y/(rand()%8 + 3) - dt) * -1 );
+			gradientFactor = cos((y/(rand()%8 + 3) - dt) * -1 );
 
-		gradientFactor *=  (cos(((x-420) / 420.0) * (3.14/2.0))) * 0.5;
-		gradientFactor *=  (cos(((y-400) / 400.0) * (3.14/2.0))) * 0.5;
+			gradientFactor *=  (cos(((x-420) / 420.0) * (3.14/2.0))) * 0.5;
+			gradientFactor *=  (cos(((y-400) / 400.0) * (3.14/2.0))) * 0.5;
 
-		//bg *= gradientFactor;
+			fadeFactor *=  (cos(((x-420) / 420.0) * (3.14/2.0)));
+			fadeFactor *=  (cos(((y-400) / 400.0) * (3.14/2.0)));
 
-		//red = static_cast<int>(0);
-		//green = static_cast<int>( 90 * gradientFactor);
-		//blue = static_cast<int>(0);
 
-		int red = (bg >> 16) & 0xFF;
-		int green = (bg >> 8) & 0xFF;
-		int blue = (bg & 0xFF);
+			int red = (bg >> 16) & 0xFF ;
+			int green = (bg >> 8) & 0xFF;
+			int blue = (bg & 0xFF);
 
-		red = ((bg >> 16) & 0xFF) * gradientFactor * 0.1;
-		green = ((bg >> 8) & 0xFF) * gradientFactor * 0.1;
-		blue = ((bg & 0xFF)) * gradientFactor * 0.1;
+			red = red * gradientFactor;
+			green = green  * 0.1 + (20 * gradientFactor);
+			blue = blue * 0.1 + (20 * gradientFactor) ;
 
-		// Draw pixel
-		g.plotPixel(x, y, red, green, blue);
+			// Draw pixel
+			g.plotPixel(x, y, red, green, blue);
+		}
 	}
-	}
-
 
 	startButton.drawObject(g,draw_image);
 
@@ -459,7 +413,6 @@ gameState game::gameOver(SDL_Plotter &g){
 }
 
 gameState game::startScreen(SDL_Plotter &g){
-
 
 	gameState nextState = game_startScreen;
 
@@ -473,6 +426,8 @@ gameState game::startScreen(SDL_Plotter &g){
 
 	point2D buttonLoc(330, 340);
 	point2D textLoc = buttonLoc + point2D(60,30);
+	point mouse;
+
 	startButton.setLocation(buttonLoc);
 	startButton.setTextLocation(textLoc);
 	startButton.setBoundry(polygon::makeCornerSquare(point2D(330,350),200,-80));
@@ -480,7 +435,7 @@ gameState game::startScreen(SDL_Plotter &g){
 	if(g.mouseClick()){
         cout<< "start screen: mouse cklick " << endl;
 		
-		point mouse = g.getMouseClick();
+		mouse = g.getMouseClick();
 		mouseClick.x = mouse.x;		
 		mouseClick.y = mouse.y;	
 
@@ -500,58 +455,46 @@ gameState game::startScreen(SDL_Plotter &g){
 	static double dt = 0;
 	static bool inits = false;
 	dt += 1;
-	//static Uint32 *screen = new Uint32[800*840];
+
+	static Uint32 *screen = new Uint32[800*840];
 	
-	// if(!inits){
-	// for (int y = 0; y < 800; y++) {
-	// 	for (int x = 0; x < 840; x++) {
-	// 		screen[y * 800 + x]	= g.getColor(x,y);		
-	// 	}
-	// }
-	// 	inits = true;
-	// }
+	if(!inits){
+	for (int y = 0; y < 800; y++) {
+		for (int x = 0; x < 840; x++) {
+			screen[y * 800 + x]	= g.getColor(x,y);		
+		}
+	}
+		inits = true;
+	}
 
 	
-	// for (int y = 0; y < 800; y++) {
-	// for (int x = 0; x < 840; x++) {
-	// 	// Calculate color based on position
-	// 	double gradientFactor = 1;
-	// 	double fadeFactor = 1;
-	// 	Uint32 bg = backgroundIMG.pixel_data[y * 800 + x];
+	for (int y = 0; y < 800; y++) {
+	for (int x = 0; x < 840; x++) {
+		// Calculate color based on position
+		double gradientFactor = 1;
+		double fadeFactor = 1;
+		Uint32 bg = screen[y * 800 + x];
 
-	// 	gradientFactor = cos((y/(rand()%8 + 3) - dt) * -1 );
+		gradientFactor = cos((y/(rand()%8 + 3) - dt) * -1 );
 
-	// 	fadeFactor *=  (cos(((x-420) / 420.0) * (3.14/2.0)));
-	// 	fadeFactor *=  (cos(((y-400) / 400.0) * (3.14/2.0)));
+		int red = (bg >> 16) & 0xFF ;
+		int green = (bg >> 8) & 0xFF;
+		int blue = (bg & 0xFF);
 
-	// 	//bg *= gradientFactor;
+		red =  red;
+		green = green;
+		blue =  blue;
 
-	// 	//red = static_cast<int>(0);
-	// 	//green = static_cast<int>( 90 * gradientFactor);
-	// 	//blue = static_cast<int>(0);
+		int ga = static_cast<int>(0.299 * red + 0.587 * green + 0.114 * blue);
 
-	// 	//gradientFactor = std::clamp(gradientFactor, 0.0, 1.0);
-
-	// 	int red = (bg >> 16) & 0xFF ;
-	// 	int green = (bg >> 8) & 0xFF;
-	// 	int blue = (bg & 0xFF);
-
-	// 	// red = red * fadeFactor  ;
-	// 	// green = green * fadeFactor ;
-	// 	// blue = blue * fadeFactor ;
-
-	// 	// red =  (gradientFactor * 100) + red;
-	// 	// green = (gradientFactor * 100) + green ;
-	// 	// blue =  (gradientFactor * 100) + red ;
-
-	// 	double drawY = y ;//+ gradientFactor ;
+		double drawY = y + gradientFactor ;
 		
-	// 	//if(x >= 0 && drawY >= 0 && x < 840 && drawY < 800){
-	// 		// Draw pixel
-	// 		g.plotPixel(x, drawY, red, green, blue);
-	// 	//}
-	// }
-	// }
+		if(x >= 0 && drawY >= 0 && x < 840 && drawY < 800){
+			//Draw pixel
+			g.plotPixel(x, drawY, ga, ga, ga);
+		}
+	}
+	}
 
 	startButton.drawObject(g,draw_image);
 

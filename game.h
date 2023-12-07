@@ -14,6 +14,7 @@
 #include "images/arrow.c"
 #include "images/banner.c"
 #include "images/quitButton.c"
+#include "images/gameOver.c"
 
 #include "obstacle.h"
 #include "Object.h"
@@ -49,7 +50,6 @@ private:
 
     int level;
 	//Time for physics
-
 	uint64_t t;
 	uint64_t dt;
 	static uint64_t s5;
@@ -58,7 +58,6 @@ private:
     int size;
 
 	// Image button;
-
 	Vector2D force;
 	point2D arrowPos;
 
@@ -74,6 +73,5 @@ private:
 
 	vector<Object> walls;
 	vector<obstacle> obst; 
-
 };
 #endif

@@ -34,6 +34,8 @@ public:
     void hide();
     void show();
 
+    bool isVisable();
+
     void updatePosition(const point2D &pos);
     void rotate(double angleInRadians, const point2D &pivot);
 

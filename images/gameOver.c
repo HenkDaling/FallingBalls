@@ -1,11 +1,11 @@
 /* GIMP RGBA C-Source image dump (gameOver.c) */
 
 static const struct {
-  guint  	 width;
-  guint  	 height;
-  guint  	 bytes_per_pixel; /* 2:RGB16, 3:RGB, 4:RGBA */ 
-  guint8 	 pixel_data[632 * 153 * 4 + 1];
-} gameOver = {
+  unsigned int  	 width;
+  unsigned int  	 height;
+  unsigned int  	 bytes_per_pixel; /* 2:RGB16, 3:RGB, 4:RGBA */ 
+  unsigned char 	 pixel_data[632 * 153 * 4 + 1];
+} gameOverImg = {
   632, 153, 4,
   "\377\377\377\377\377\377\377\377\377\377\377\377\377\377\377\377\377\377"
   "\377\377\377\377\377\377\377\377\377\377\377\377\377\377\377\377\377\377"
