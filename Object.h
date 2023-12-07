@@ -71,6 +71,9 @@ public:
     //postcondition: position is assigned with pos
     //return type: nothing
     //description of function: changes position of object
+
+    bool isVisable();
+
     void updatePosition(const point2D &pos);
 
     //precondition: angle and pivot point

@@ -49,10 +49,8 @@ public:
     //return type: nothing
     //description of function: deletes image object
     ~Image() {
-        if (pixelData != nullptr) {
-            //delete[] pixelData;
-        }
-    }
+    
+    }   
 
     //precondition: nothing
     //postcondition: prints info to the screen
