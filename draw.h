@@ -1,3 +1,13 @@
+/*
+Authors: Henk Daling, Mark Pattillo, Griffin Roe,
+    Joshua Gilpin, David Sobernheim
+Assignment Title: Falling Balls
+Assignment Description: Create the falling balls game
+Due Date: 12/6/23
+Date Created: 11/15/23
+Date Last Modified: 12/6/23
+*/
+
 #ifndef DRAW_H
 #define DRAW_H
 
@@ -65,7 +75,7 @@ static void drawLine(int x1, int y1, int x2, int y2, SDL_Plotter &g,color c) {
 }
 
 static void drawOutline(vector<point2D> points, SDL_Plotter &g,color c) {
-    
+
     for (size_t i = 0; i < points.size() - 1; ++i) {
         if (points.at(i).x >= 0 && points.at(i).x < g.getCol() && points.at(i).y >= 0 && points.at(i).y < g.getRow()) {
             drawLine(points[i].x, points[i].y, points[i + 1].x, points[i + 1].y, g, c);
@@ -73,7 +83,7 @@ static void drawOutline(vector<point2D> points, SDL_Plotter &g,color c) {
     }
     drawLine(points.back().x, points.back().y, points.front().x, points.front().y, g, c);
 
-    
+
 }
 
 static void drawFillPolygon(vector<point2D> points, SDL_Plotter &g,color c) {
@@ -87,7 +97,7 @@ static void drawFillPolygon(vector<point2D> points, SDL_Plotter &g,color c) {
     for (double y = minY; y <= maxY; ++y) {
         std::vector<double> intersections;
 
-        // Find intersections 
+        // Find intersections
         for (size_t i = 0; i < points.size(); ++i) {
             const point2D& p1 = points[i];
             const point2D& p2 = points[(i + 1) % points.size()];
@@ -138,13 +148,13 @@ static void drawImagePixels(point2D position, Image &img, SDL_Plotter &g, double
                 if(img.bytesPerPixel == 4){ index++; }
 
                 if(!(color(rd,gn,bl) == DontDraw)){ //SDL PLOTTER DOES NOT PROVIDE ALPHA CHANNEL
-                    if(img.bytesPerPixel == 4){    
-                        g.plotPixel(drawX, drawY, rd, gn, bl);   
+                    if(img.bytesPerPixel == 4){
+                        g.plotPixel(drawX, drawY, rd, gn, bl);
                     }
                     else{
-                        g.plotPixel(drawX, drawY, rd, gn, bl);   
-                    }  
-                } 
+                        g.plotPixel(drawX, drawY, rd, gn, bl);
+                    }
+                }
 
             } else {
                 index += (img.bytesPerPixel == 4) ? 4 : 3;
@@ -156,7 +166,7 @@ static void drawImagePixels(point2D position, Image &img, SDL_Plotter &g, double
 
 static void drawText(point2D position, string text, SDL_Plotter &g, double angle = 0, point2D pivot = point2D()){
     //change
-    
+
     //g.plotText(position.x, position.y, text);
 }
 

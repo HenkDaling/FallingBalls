@@ -1,8 +1,18 @@
+/*
+Authors: Henk Daling, Mark Pattillo, Griffin Roe,
+    Joshua Gilpin, David Sobernheim
+Assignment Title: Falling Balls
+Assignment Description: Create the falling balls game
+Due Date: 12/6/23
+Date Created: 11/15/23
+Date Last Modified: 12/6/23
+*/
+
 #include "polygon.h"
 #include <cmath>
 
 polygon::polygon(){
-    poly.clear();                
+    poly.clear();
 };
 
 polygon::polygon(vector<point2D> points, point2D pos){
@@ -27,7 +37,7 @@ void polygon::updatePosition(const point2D &pos){
 
 void polygon::rotate(double angleInRadians, const point2D & pivot)
 {
-    
+
      for (size_t i = 0; i < poly.size(); ++i) {
         poly.at(i) = Vector2D::rotate(angleInRadians, poly.at(i), pivot);
     }
@@ -139,7 +149,7 @@ polygon polygon::makeCenterSquare(point2D midpoint, double width, double height)
 polygon polygon::makeCircle(point2D midpoint, double radius, unsigned int resolution){
     polygon pol;
 
-    double angle = 2 * M_PI / static_cast<double>(resolution); 
+    double angle = 2 * M_PI / static_cast<double>(resolution);
     double theta = 0;
     double x;
     double y;
@@ -160,7 +170,7 @@ polygon polygon::makeCircle(point2D midpoint, double radius, unsigned int resolu
 }
 
 bool polygon::intersects(const polygon& other, Vector2D &angle) {
-    
+
     bool intersect = false;
     int intersectCount = 0;
     vector<point2D> ipoints;
@@ -177,15 +187,15 @@ bool polygon::intersects(const polygon& other, Vector2D &angle) {
             }
             else{
                 angle = angle + angleOfIntersect(vertex,&other) * -1.0;
-            }       
+            }
             intersectCount++;
         }
 
     }
-  
-        
+
+
     if(!intersect){
-        
+
         for (const point2D& vertex : getPoints()) {
             if (other.intersects(vertex)) {
                 intersect = true;
@@ -197,7 +207,7 @@ bool polygon::intersects(const polygon& other, Vector2D &angle) {
                 intersectCount++;
             }
         }
- 
+
     }
 
 
@@ -207,7 +217,7 @@ bool polygon::intersects(const polygon& other, Vector2D &angle) {
 bool polygon::intersects(const point2D& p) const {
 
     //reference : https://en.wikipedia.org/wiki/Point_in_polygon
-    
+
     int intersectCount = 0;
     const vector<point2D>& vertices = getPoints();
     size_t numVertices = vertices.size();
@@ -217,7 +227,7 @@ bool polygon::intersects(const point2D& p) const {
         const point2D& v2 = vertices[(i + 1) % numVertices];
 
         if ((v1.y <= p.y && p.y < v2.y) || (v2.y <= p.y && p.y < v1.y)) {
-           
+
             double xIntersection = (v2.x - v1.x) * (p.y - v1.y) / (v2.y - v1.y) + v1.x;
 
             if (p.x < xIntersection) {
@@ -227,7 +237,7 @@ bool polygon::intersects(const point2D& p) const {
     }
 
     return (intersectCount % 2) == 1;
-    
+
 }
 
 
@@ -239,10 +249,10 @@ Vector2D polygon::angleOfIntersect(const point2D& intersectionPoint,const polygo
 
     Vector2D vector1 = Vector2D::createFromCartesian(intersectionPoint.x - vertex1.x, intersectionPoint.y - vertex1.y);
     Vector2D vector2 = Vector2D::createFromCartesian(intersectionPoint.x - vertex2.x , intersectionPoint.y - vertex2.y );
-    
+
     Vector2D normal =  Vector2D::createFromCartesian(vector1.crossProduct(vector2), vector2.crossProduct(vector1));
     normal = vector1 + vector2;
-    
+
     normal = normal * (-1.0);
 
     normal.normalize();
@@ -260,6 +270,6 @@ int polygon::getIndex(const point2D& p) const {
 }
 
 polygon& polygon::operator=(const polygon& p) {
-        poly = p.getPoints();        
+        poly = p.getPoints();
         return *this;
     };

@@ -1,3 +1,13 @@
+/*
+Authors: Henk Daling, Mark Pattillo, Griffin Roe,
+    Joshua Gilpin, David Sobernheim
+Assignment Title: Falling Balls
+Assignment Description: Create the falling balls game
+Due Date: 12/6/23
+Date Created: 11/15/23
+Date Last Modified: 12/6/23
+*/
+
 #include "vect.h"
 #include <cmath>
 
@@ -31,7 +41,7 @@ Vector2D Vector2D::createFromPolar(double r, double A){
 
     while(A > 2 * M_PI){ A -= 2*M_PI; };
     while(A < 0) A += 2*M_PI;
-    
+
     v.x = r * cos(A);
     v.y = r * sin(A);
 
@@ -80,7 +90,7 @@ Vector2D Vector2D::perpendicular() const {
 
 void Vector2D::normalize() {
     double magnitude = getMagnitude();
-    
+
     if (magnitude != 0.0) {
         x /= magnitude;
         y /= magnitude;

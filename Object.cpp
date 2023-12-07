@@ -1,3 +1,13 @@
+/*
+Authors: Henk Daling, Mark Pattillo, Griffin Roe,
+    Joshua Gilpin, David Sobernheim
+Assignment Title: Falling Balls
+Assignment Description: Create the falling balls game
+Due Date: 12/6/23
+Date Created: 11/15/23
+Date Last Modified: 12/6/23
+*/
+
 #include "Object.h"
 #include "draw.h"
 #include <sstream>
@@ -72,32 +82,32 @@ void Object::drawImage(SDL_Plotter &g, double angle  , point2D pivot, const colo
 void Object::drawText(SDL_Plotter &g)
 {
     draw::drawText(textPosition , this->text, g, this->Theta_rotation, this->getPosition());
-    
+
 }
 
 void Object::drawObject(SDL_Plotter &g, drawMode mode, color c){
 
     if(IsVissable){
-        
+
         switch (mode) {
-            case draw_image: 
+            case draw_image:
                 drawImage(g);
                 break;
-            case draw_polygon_fill:      
+            case draw_polygon_fill:
                 draw::drawFillPolygon(boundry.getPoints(),g,c);
                 break;
-            case draw_polygon_outline:      
+            case draw_polygon_outline:
                 draw::drawOutline(boundry.getPoints(),g,c);
                 break;
             case draw_image_and_polygon:
                 drawImage(g);
                 //boundry.updatePosition(upd);
                 draw::drawOutline(boundry.getPoints(),g,c);
-                break;            
+                break;
             default:
                 break;
         }
-        
+
     }
 }
 
