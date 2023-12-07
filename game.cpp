@@ -167,6 +167,7 @@ gameState game::playingGame(SDL_Plotter &g){
 
     g.getMouseLocation(mouseX, mouseY);
     direction = Vector2D::createFromCartesian( mouseX - arrowPos.x, mouseY - arrowPos.y);
+	direction.normalize();
 
     directionArrow.drawImage(g,direction.getAngle() ,arrowPos, color(255,255,255));
     draw::drawFillPolygon(polygon::makeCircle(arrowPos,20,20).getPoints(),g, color(255,0,0));
@@ -195,7 +196,7 @@ gameState game::playingGame(SDL_Plotter &g){
 		else{
 			g.getMouseClick();
         	b.setLocation(arrowPos - point2D(beachBall.width/2, beachBall.height/2));
-        	b.giveVelocity(direction);
+        	b.giveVelocity(direction * 100.0);
 		}
     }
 
@@ -436,7 +437,7 @@ gameState game::startScreen(SDL_Plotter &g){
 
 	point2D buttonLoc(330, 340);
 	point2D textLoc = buttonLoc + point2D(60,30);
-	point mouse;
+	point mouse;	
 
 	startButton.setLocation(buttonLoc);
 	startButton.setTextLocation(textLoc);
@@ -491,20 +492,16 @@ gameState game::startScreen(SDL_Plotter &g){
 		int green = (bg >> 8) & 0xFF;
 		int blue = (bg & 0xFF);
 
-		red =  red;
-		green = green;
-		blue =  blue;
-
-		int ga = static_cast<int>(0.299 * red + 0.587 * green + 0.114 * blue);
-
 		double drawY = y + gradientFactor ;
 		
 		if(x >= 0 && drawY >= 0 && x < 840 && drawY < 800){
 			//Draw pixel
-			g.plotPixel(x, drawY, ga, ga, ga);
+			g.plotPixel(x, drawY, red, green, blue);
 		}
 	}
 	}
+
+	startButton.drawImage(g);
 
 	return nextState;
 

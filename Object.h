@@ -59,7 +59,7 @@ public:
     void setTextLocation(point2D &p);
 
     void drawImage(SDL_Plotter &g, double angle = 0 , point2D pivot = point2D(), const color &DontDraw = color(255,0,255) );
-    void drawPolygon(){};
+
     void drawObject(SDL_Plotter &g,drawMode mode, color = color());
     void drawText(SDL_Plotter &g);
 

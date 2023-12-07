@@ -12,6 +12,7 @@ Date Last Modified: 12/6/23
 #define IMAGE_H
 
 #include <cstddef>
+#include <cstring>
 
 class Image {
 public:
@@ -21,6 +22,15 @@ public:
     unsigned char* pixelData;
 
     Image() : width(0), height(0), bytesPerPixel(0), pixelData(nullptr) {}
+    
+    Image(unsigned int width, unsigned int height, unsigned int bpp, const unsigned char* srcPixelData) 
+        : width(width), height(height), bytesPerPixel(bpp) {
+
+        size_t dataSize = width * height * bytesPerPixel;
+        pixelData = new unsigned char[dataSize];
+        std::memcpy(pixelData, srcPixelData, dataSize);
+
+    }
 
     template <typename T> Image(const T& image) {
         width = image.width;
@@ -37,7 +47,7 @@ public:
     }
 
     ~Image() {
-    
+           
     }   
 
     void displayInfo() const;
