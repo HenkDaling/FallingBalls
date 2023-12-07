@@ -1,3 +1,13 @@
+/*
+Authors: Henk Daling, Mark Pattillo, Griffin Roe,
+    Joshua Gilpin, David Sobernheim
+Assignment Title: Falling Balls
+Assignment Description: Create the falling balls game
+Due Date: 12/6/23
+Date Created: 11/15/23
+Date Last Modified: 12/6/23
+*/
+
 #include "game.h"
 #include <chrono>
 #include <iostream>
@@ -16,7 +26,7 @@ game::game(SDL_Plotter &g)
 	        directionArrow =(arrowImg);
 			directionArrow.setLocation(point2D(g.getCol()/2.0, 20));
 			directionArrow.show();
-			
+
 			b = ball( directionArrow.getPosition() - point2D(beachBall.width/2, beachBall.height/2), Vector2D::createFromCartesian(0,0));
 
 			b.setLocation(point2D(g.getCol()/2.0, 20)  - point2D(beachBall.width/2, beachBall.height/2));
@@ -24,12 +34,12 @@ game::game(SDL_Plotter &g)
 
     		b.setBoundry(polygon::makeCircle((b.getPosition() + point2D(42,42)), 42,30));
 			b.show();
-			
+
 			box.setLocation(point2D(0,0));
 			box.setBoundry(polygon::makeCornerSquare(box.getPosition(),800,10));
 			box.show();
 
-			
+
 			wallLeft.setLocation(point2D(0.0,800));
 			wallLeft.setBoundry(polygon::makeCornerSquare(wallLeft.getPosition(),10,800));
 			wallLeft.show();
@@ -37,7 +47,7 @@ game::game(SDL_Plotter &g)
 			wallRight.setLocation(point2D(830,800));
 			wallRight.setBoundry(polygon::makeCornerSquare(wallRight.getPosition(),10,800));
 			wallRight.show();
-			
+
 			//background.setLocation(point2D(40,0));
 			//background.show();
 
@@ -48,7 +58,7 @@ game::game(SDL_Plotter &g)
             //bgI = Image(backgroundIMG);
 
 			level = 1;
-	       
+
 			generateLevel(1, obst);
 
 }
@@ -64,8 +74,8 @@ void game::generateLevel (int level,vector<obstacle> &o ){
             obstacle newO;
 
             int randomX = rand() % 720 + 40;
-            int randomY =  700 - rand() % 100 ; 
-            int R = rand() % 100 + 155; 
+            int randomY =  700 - rand() % 100 ;
+            int R = rand() % 100 + 155;
             int G = rand() % 100 + 155;
             int B = rand() % 100 + 155;
 
@@ -74,14 +84,14 @@ void game::generateLevel (int level,vector<obstacle> &o ){
             int shape = rand() % 3;
 
             switch(shape){
-                case 0: 
-                    newO.setBoundry(polygon::makeCenterSquare(newO.getPosition(), 100, 100)); 
+                case 0:
+                    newO.setBoundry(polygon::makeCenterSquare(newO.getPosition(), 100, 100));
                     break;
-                case 1: 
-                    newO.setBoundry(polygon::makeCircle(newO.getPosition(), 50,6)); 
+                case 1:
+                    newO.setBoundry(polygon::makeCircle(newO.getPosition(), 50,6));
                     break;
-                case 2: 
-                    newO.setBoundry(polygon::makeEquilateralTriangle(newO.getPosition(), 100)); 
+                case 2:
+                    newO.setBoundry(polygon::makeEquilateralTriangle(newO.getPosition(), 100));
                     break;
 
             }
@@ -99,7 +109,7 @@ void game::moveUp(vector<obstacle> &o){
     point2D pos;
 
     for (size_t i = 0; i < o.size(); i++) {
-        
+
         pos = o.at(i).getPosition();
         pos.y -= 150.0;
 
@@ -119,9 +129,12 @@ gameState game::playingGame(SDL_Plotter &g){
 	Object buttonQuit(bQuit);
 	Image bgImage(backgroundImg);
 	double a = 0.001;
+<<<<<<< HEAD
 	int mouseX, mouseY;
     Vector2D direction;   
 	vector<obstacle> valid;
+=======
+>>>>>>> cf5f67429362f64be54ddca7f796df55f2f18168
 
 	dt = dt + 1;
 
@@ -131,9 +144,14 @@ gameState game::playingGame(SDL_Plotter &g){
     for (size_t i = 0; i < obst.size(); i++) {
         if (obst.at(i).isDead()) {
             obst.at(i).hide();
+<<<<<<< HEAD
     	}else{
 			valid.push_back(obst.at(i));
 			if (obst.at(i).isTop()){
+=======
+    	}
+		if (obst.at(i).isTop()){
+>>>>>>> cf5f67429362f64be54ddca7f796df55f2f18168
 			gameOver = true;
 		}
 		}
@@ -157,10 +175,20 @@ gameState game::playingGame(SDL_Plotter &g){
 
     g.getMouseLocation(mouseX, mouseY);
     direction = Vector2D::createFromCartesian( mouseX - arrowPos.x, mouseY - arrowPos.y);
-    
+
     directionArrow.drawImage(g,direction.getAngle() ,arrowPos, color(255,255,255));
     draw::drawFillPolygon(polygon::makeCircle(arrowPos,20,20).getPoints(),g, color(255,0,0));
 
+<<<<<<< HEAD
+=======
+	//Draw buttons
+	Image bPause = Image(pauseButton);
+	Object buttonPause(bPause);
+
+	Image bQuit = Image(quitButton);
+	Object buttonQuit(bQuit);
+
+>>>>>>> cf5f67429362f64be54ddca7f796df55f2f18168
 	buttonPause.setLocation(point2D(750,10));
 	buttonPause.setBoundry(polygon::makeCornerSquare(buttonPause.getPosition(), 75, -75)) ;
 	buttonPause.drawObject(g, draw_polygon_outline);
@@ -170,7 +198,7 @@ gameState game::playingGame(SDL_Plotter &g){
 	buttonQuit.setBoundry(polygon::makeCornerSquare(buttonQuit.getPosition(), 75, -75)) ;
 	buttonQuit.drawObject(g, draw_polygon_outline);
 	buttonQuit.show();
-	
+
     if(g.mouseClick()){
 		int x,y;
 		g.getMouseLocation(x, y);
@@ -178,7 +206,7 @@ gameState game::playingGame(SDL_Plotter &g){
 
 		if(buttonPause.isInside(point2D(x,y))){
 			pause = true;
-		} 
+		}
 		else if(buttonQuit.isInside(point2D(x,y))){
 			g.setQuit(true);
 		}
@@ -188,11 +216,11 @@ gameState game::playingGame(SDL_Plotter &g){
         	b.giveVelocity(direction);
 		}
     }
-    
+
     static double ang = 0;
     ang += 0.01;
 
-	
+
 	b.update(dt);
 	b.drawImage(g,0, b.getBoundry().calculateCenter(), color(255,255,255));
 
@@ -208,7 +236,7 @@ gameState game::playingGame(SDL_Plotter &g){
 
 
     for (size_t i = 0; i < obst.size(); i++) {
-        if(!obst.at(i).isDead()){	
+        if(!obst.at(i).isDead()){
             obst.at(i).isColiding(b);
             if(b.isColiding(obst.at(i))){
 				cout << "checking\n";
@@ -250,10 +278,10 @@ gameState game::pauseGame(SDL_Plotter &g){
 	startButton.setBoundry(polygon::makeCornerSquare(buttonLoc,200,-80));
 
 	if(g.mouseClick()){
-		
+
 		point mouse = g.getMouseClick();
-		mouseClick.x = mouse.x;		
-		mouseClick.y = mouse.y;	
+		mouseClick.x = mouse.x;
+		mouseClick.y = mouse.y;
 
 		if(startButton.isInside(mouseClick)){
 			nextState = game_run;
@@ -262,24 +290,33 @@ gameState game::pauseGame(SDL_Plotter &g){
 		g.getMouseClick();
 	}
 
+<<<<<<< HEAD
 	
+=======
+
+	draw::drawImagePixels(point2D(80,200), banner, g, 0, point2D(), color(255,0,255));
+>>>>>>> cf5f67429362f64be54ddca7f796df55f2f18168
 	static double dt = 0;
 	static bool init = false;
 	static bool inits = false;
 	dt += 1;
 	static Uint32 *screen = new Uint32[800*840];
-	
+
 	if(!init){
 	for (int y = 0; y < 800; y++) {
 		for (int x = 0; x < 840; x++) {
-			screen[y * 800 + x]	= g.getColor(x,y);		
+			screen[y * 800 + x]	= g.getColor(x,y);
 		}
 	}
 	init = true;
 	}
 
+<<<<<<< HEAD
 	
 	if(!inits){
+=======
+
+>>>>>>> cf5f67429362f64be54ddca7f796df55f2f18168
 	for (int y = 0; y < 800; y++) {
 		for (int x = 0; x < 840; x++) {
 			screen[y * 800 + x]	= g.getColor(x,y);		
@@ -335,13 +372,37 @@ gameState game::gameOver(SDL_Plotter &g){
 	Object startButton(sButtonImage);
 	Image bannerGameOver(gameOverImg);
 
+<<<<<<< HEAD
 	double gradientFactor; // Gradient based on vertical position
 	double fadeFactor;
 	Uint32 bg;
 	static double dt = 0;
+=======
+	point2D buttonLoc(330, 340);
+	point2D textLoc = buttonLoc + point2D(60,30);
+	startButton.setLocation(buttonLoc);
+	startButton.setTextLocation(textLoc);
+	startButton.setBoundry(polygon::makeCornerSquare(point2D(330,350),200,-80));
+
+	if(g.mouseClick()){
+
+		point mouse = g.getMouseClick();
+		mouseClick.x = mouse.x;
+		mouseClick.y = mouse.y;
+
+		if(startButton.isInside(mouseClick)){
+			nextState = game_run;
+		}
+
+		g.getMouseClick();
+	}
+
+		static double dt = 0;
+>>>>>>> cf5f67429362f64be54ddca7f796df55f2f18168
 	static bool init = false;
 	static Uint32 *screen = new Uint32[800*840];
 
+<<<<<<< HEAD
 	point2D mouseClick;
 	point2D buttonLoc(330, 500);
 
@@ -352,17 +413,20 @@ gameState game::gameOver(SDL_Plotter &g){
 	draw::drawImagePixels(point2D(100, 200), bannerGameOver, g,0,point2D());
 	//Initialization
 
+=======
+>>>>>>> cf5f67429362f64be54ddca7f796df55f2f18168
 	if(!init){
 		obst.clear();
 
 		for (int y = 0; y < 800; y++) {
 			for (int x = 0; x < 840; x++) {
-				screen[y * 800 + x]	= g.getColor(x,y);		
+				screen[y * 800 + x]	= g.getColor(x,y);
 			}
 		}
 		init = true;
 	}
 
+<<<<<<< HEAD
 	startButton.setLocation(buttonLoc);
 	startButton.setBoundry(polygon::makeCornerSquare(buttonLoc,200,-80));
 
@@ -378,6 +442,8 @@ gameState game::gameOver(SDL_Plotter &g){
 	}
 	
 	//Output
+=======
+>>>>>>> cf5f67429362f64be54ddca7f796df55f2f18168
 
 	for (int y = 0; y < 800; y++) {
 		for (int x = 0; x < 840; x++) {
@@ -434,10 +500,17 @@ gameState game::startScreen(SDL_Plotter &g){
 
 	if(g.mouseClick()){
         cout<< "start screen: mouse cklick " << endl;
+<<<<<<< HEAD
 		
 		mouse = g.getMouseClick();
 		mouseClick.x = mouse.x;		
 		mouseClick.y = mouse.y;	
+=======
+
+		point mouse = g.getMouseClick();
+		mouseClick.x = mouse.x;
+		mouseClick.y = mouse.y;
+>>>>>>> cf5f67429362f64be54ddca7f796df55f2f18168
 
 		if(startButton.isInside(mouseClick)){
 			nextState = game_run;
@@ -455,6 +528,7 @@ gameState game::startScreen(SDL_Plotter &g){
 	static double dt = 0;
 	static bool inits = false;
 	dt += 1;
+<<<<<<< HEAD
 
 	static Uint32 *screen = new Uint32[800*840];
 	
@@ -474,6 +548,26 @@ gameState game::startScreen(SDL_Plotter &g){
 		double gradientFactor = 1;
 		double fadeFactor = 1;
 		Uint32 bg = screen[y * 800 + x];
+=======
+	//static Uint32 *screen = new Uint32[800*840];
+
+	// if(!inits){
+	// for (int y = 0; y < 800; y++) {
+	// 	for (int x = 0; x < 840; x++) {
+	// 		screen[y * 800 + x]	= g.getColor(x,y);
+	// 	}
+	// }
+	// 	inits = true;
+	// }
+
+
+	// for (int y = 0; y < 800; y++) {
+	// for (int x = 0; x < 840; x++) {
+	// 	// Calculate color based on position
+	// 	double gradientFactor = 1;
+	// 	double fadeFactor = 1;
+	// 	Uint32 bg = backgroundIMG.pixel_data[y * 800 + x];
+>>>>>>> cf5f67429362f64be54ddca7f796df55f2f18168
 
 		gradientFactor = cos((y/(rand()%8 + 3) - dt) * -1 );
 
@@ -487,6 +581,7 @@ gameState game::startScreen(SDL_Plotter &g){
 
 		int ga = static_cast<int>(0.299 * red + 0.587 * green + 0.114 * blue);
 
+<<<<<<< HEAD
 		double drawY = y + gradientFactor ;
 		
 		if(x >= 0 && drawY >= 0 && x < 840 && drawY < 800){
@@ -495,6 +590,30 @@ gameState game::startScreen(SDL_Plotter &g){
 		}
 	}
 	}
+=======
+	// 	//gradientFactor = std::clamp(gradientFactor, 0.0, 1.0);
+
+	// 	int red = (bg >> 16) & 0xFF ;
+	// 	int green = (bg >> 8) & 0xFF;
+	// 	int blue = (bg & 0xFF);
+
+	// 	// red = red * fadeFactor  ;
+	// 	// green = green * fadeFactor ;
+	// 	// blue = blue * fadeFactor ;
+
+	// 	// red =  (gradientFactor * 100) + red;
+	// 	// green = (gradientFactor * 100) + green ;
+	// 	// blue =  (gradientFactor * 100) + red ;
+
+	// 	double drawY = y ;//+ gradientFactor ;
+
+	// 	//if(x >= 0 && drawY >= 0 && x < 840 && drawY < 800){
+	// 		// Draw pixel
+	// 		g.plotPixel(x, drawY, red, green, blue);
+	// 	//}
+	// }
+	// }
+>>>>>>> cf5f67429362f64be54ddca7f796df55f2f18168
 
 	startButton.drawObject(g,draw_image);
 

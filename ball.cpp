@@ -1,3 +1,13 @@
+/*
+Authors: Henk Daling, Mark Pattillo, Griffin Roe,
+    Joshua Gilpin, David Sobernheim
+Assignment Title: Falling Balls
+Assignment Description: Create the falling balls game
+Due Date: 12/6/23
+Date Created: 11/15/23
+Date Last Modified: 12/6/23
+*/
+
 #include "ball.h"
 
 using namespace std::chrono;
@@ -14,7 +24,7 @@ ball::ball(point2D pos,Vector2D force)
 {
     this->updatePosition(pos);
     mass = 1;
-    
+
     netForce = force;
 
     acceleration =  Vector2D(netForce.getMagnitude() / mass, netForce.getAngle());
@@ -38,13 +48,13 @@ void ball::update(uint64_t deltaTime) {
     double timeFactor = 10;
 
     acceleration = Vector2D(netForce.getMagnitude() / mass, netForce.getAngle());
- 
+
     velocity = velocity + (acceleration * (deltaTime / timeFactor));
 
     // Update position using the equations of motion
     pos.x += velocity.getX() * (deltaTime / timeFactor);
     pos.y += velocity.getY() * (deltaTime / timeFactor);
-    
+
     this->updatePosition(pos);
 
     time = t;
@@ -69,7 +79,7 @@ void ball::handleContCollisions(Object& other) {
         pos.y += separationVector.getY() * separationDistance;
 
         this->updatePosition(pos);
- 
+
         Vector2D normalVector = Vector2D::createFromPolar(1.0, CollisionAngle);
         normalVector = normalVector  ;
 
@@ -80,8 +90,8 @@ void ball::handleContCollisions(Object& other) {
         Vector2D reflection = velocity - (normalVector * (dotProduct * 2.0));
 
         // Update the velocity of the ball
-        velocity = reflection * 1.0 ;    
-        
+        velocity = reflection * 1.0 ;
+
 }
 
 void ball::setForce(Vector2D F)

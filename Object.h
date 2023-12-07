@@ -1,3 +1,13 @@
+/*
+Authors: Henk Daling, Mark Pattillo, Griffin Roe,
+    Joshua Gilpin, David Sobernheim
+Assignment Title: Falling Balls
+Assignment Description: Create the falling balls game
+Due Date: 12/6/23
+Date Created: 11/15/23
+Date Last Modified: 12/6/23
+*/
+
 #ifndef OBJECT_H
 #define OBJECT_H
 
@@ -10,7 +20,7 @@ enum drawMode{
     draw_image,
     draw_polygon_fill,
     draw_polygon_outline,
-    draw_image_and_polygon    
+    draw_image_and_polygon
 };
 
 class Object
@@ -21,7 +31,7 @@ private:
     double Theta_rotation;
 protected:
     Image img;
-    polygon boundry;    
+    polygon boundry;
     double CollisionAngle;
     bool IsVissable;
     string text;
@@ -61,7 +71,7 @@ public:
         return boundry.intersects(p);
     }
 
-    
+
 
     bool isColiding(Object& other){
         Vector2D v;
@@ -71,7 +81,7 @@ public:
             }
         return boundry.intersects(other.getBoundry(), v);
     }
-    
+
 };
 
 #endif

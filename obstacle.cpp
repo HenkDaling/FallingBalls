@@ -1,9 +1,19 @@
+/*
+Authors: Henk Daling, Mark Pattillo, Griffin Roe,
+    Joshua Gilpin, David Sobernheim
+Assignment Title: Falling Balls
+Assignment Description: Create the falling balls game
+Due Date: 12/6/23
+Date Created: 11/15/23
+Date Last Modified: 12/6/23
+*/
+
 #include "obstacle.h"
 #include <cmath>
 
 obstacle::obstacle()
 {
-    
+
 
 }
 
@@ -54,7 +64,7 @@ void obstacle::drawObstacle(SDL_Plotter &g)
         this->drawObject(g,draw_polygon_outline, c);
 
         this->setText(to_string(count));
-        
+
         drawText(g);
     }
 }
